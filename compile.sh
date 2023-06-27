@@ -11,6 +11,6 @@ fi
 set -e
 
 # preprocess
-"$CC" -I"$CHIBICC_DIR" -I"./oneko-uxn/" -P -E -x c "./oneko-uxn/oneko.c" -o tmp.c 
+"$CC" -I"$CHIBICC_DIR" -P -E -x c "./oneko-uxn/oneko.c" -o tmp.c
 # compile
 "$CHIBICC_DIR"/chibicc -O tmp.c

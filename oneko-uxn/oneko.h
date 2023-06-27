@@ -8,18 +8,7 @@
  *	インクルードファイル
  */
 
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/extensions/shape.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <signal.h>
-#include <math.h>
-#include <sys/time.h>
-
+#include <uxn.h>
 
 /*
  *	カーソルビットマップファイルの読み込み
