@@ -67,7 +67,7 @@ AnimalDefaultsData AnimalDefaultsDataTable[] =
 char	*Foreground = NULL;		/*   foreground	*/
 char	*Background = NULL;		/*   background	*/
 /*long*/ int	IntervalTime = 0;		/*   time	*/
-double	NekoSpeed = (double)0;		/*   speed	*/
+//double	NekoSpeed = (double)0;		/*   speed	*/
 int	IdleSpace = 0;			/*   idle	*/
 int	NekoMoyou = NOTDEFINED;		/*   tora	*/
 int	NoShape = NOTDEFINED;		/*   noshape	*/
@@ -110,8 +110,8 @@ int     RaiseWindowDelay=0;
  *	その他
  */
 
-double	SinPiPer8Times3;	/* sin(３π／８) */
-double	SinPiPer8;		/* sin(π／８) */
+//double	SinPiPer8Times3;	/* sin(３π／８) */
+//double	SinPiPer8;		/* sin(π／８) */
 
 Pixmap	Mati2Xbm, Jare2Xbm, Kaki1Xbm, Kaki2Xbm, Mati3Xbm, Sleep1Xbm, Sleep2Xbm;
 Pixmap	Mati2Msk, Jare2Msk, Kaki1Msk, Kaki2Msk, Mati3Msk, Sleep1Msk, Sleep2Msk;
@@ -360,13 +360,13 @@ GetResources()
     }
   }
 
-  if (NekoSpeed == (double)0) {
+  /*if (NekoSpeed == (double)0) {
     if ((resource = NekoGetDefault("speed")) != NULL) {
       if (num = atoi(resource)) {
 	NekoSpeed = (double)num;
       }
     }
-  }
+  }*/
 
   if (IdleSpace == 0) {
     if ((resource = NekoGetDefault("idle")) != NULL) {
@@ -408,9 +408,9 @@ GetResources()
   if (IntervalTime == 0) {
     IntervalTime = AnimalDefaultsDataTable[NekoMoyou].time;
   }
-  if (NekoSpeed == (double)0) {
+  /*if (NekoSpeed == (double)0) {
     NekoSpeed = (double)(AnimalDefaultsDataTable[NekoMoyou].speed);
-  }
+  }*/
   if (IdleSpace == 0) {
     IdleSpace = AnimalDefaultsDataTable[NekoMoyou].idle;
   }
@@ -848,7 +848,7 @@ RedrawNeko()
  *
  */
 
-void
+/*void
 NekoDirection()
 {
     int			NewState;
@@ -900,7 +900,7 @@ NekoDirection()
     if (NekoState != NewState) {
 	SetNekoState(NewState);
     }
-}
+}*/
 
 
 /*
@@ -969,7 +969,7 @@ IsNekoMoveStart()
  *	猫移動 dx, dy 計算
  */
 
-void
+/*void
 CalcDxDy()
 {
     Window		QueryRoot, QueryChild;
@@ -1082,7 +1082,7 @@ CalcDxDy()
     } else {
 	NekoMoveDx = NekoMoveDy = 0;
     }
-}
+}*/
 
 
 /*
@@ -1092,7 +1092,7 @@ CalcDxDy()
 void
 NekoThinkDraw()
 {
-    CalcDxDy();
+    //CalcDxDy();
 
     if (NekoState != NEKO_SLEEP) {
 	DrawNeko(NekoX, NekoY,
@@ -1168,7 +1168,7 @@ NekoThinkDraw()
 	if (NekoStateCount < NEKO_AWAKE_TIME) {
 	    break;
 	}
-	NekoDirection();	/* 猫が動く向きを求める */
+	//NekoDirection();	/* 猫が動く向きを求める */
 	break;
     case NEKO_U_MOVE:
     case NEKO_D_MOVE:
@@ -1180,7 +1180,7 @@ NekoThinkDraw()
     case NEKO_DR_MOVE:
 	NekoX += NekoMoveDx;
 	NekoY += NekoMoveDy;
-	NekoDirection();
+	//NekoDirection();
 	if (IsWindowOver()) {
 	    if (IsNekoDontMove()) {
 		SetNekoState(NEKO_STOP);
@@ -1561,8 +1561,8 @@ main(argc, argv)
   signal(SIGTERM, RestoreCursor);
   signal(SIGQUIT, RestoreCursor);
 
-  SinPiPer8Times3 = sin(PI_PER8 * (double)3);
-  SinPiPer8 = sin(PI_PER8);
+  //SinPiPer8Times3 = sin(PI_PER8 * (double)3);
+  //SinPiPer8 = sin(PI_PER8);
 
   ProcessNeko();
 
