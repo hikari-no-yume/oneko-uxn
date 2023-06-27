@@ -221,10 +221,10 @@ BitmapGCData	BitmapGCDataTable[] =
     { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 };*/
 
-/*typedef struct {
-    GC		*TickGCPtr;
-    Pixmap	*TickMaskPtr;
-} Animation;*/
+typedef struct {
+    //GC		*TickGCPtr;
+    //Pixmap	*TickMaskPtr;
+} Animation;
 
 //Animation	AnimationPattern[][2] =
 //{
@@ -354,7 +354,7 @@ GetResources(void)
     }
   }
 
-  if (IntervalTime == 0) {
+  /*if (IntervalTime == 0) {
     if ((resource = NekoGetDefault("time")) != NULL) {
       if (num = atoi(resource)) {
 	IntervalTime = num;
@@ -362,13 +362,13 @@ GetResources(void)
     }
   }
 
-  /*if (NekoSpeed == (double)0) {
+  if (NekoSpeed == (double)0) {
     if ((resource = NekoGetDefault("speed")) != NULL) {
       if (num = atoi(resource)) {
 	NekoSpeed = (double)num;
       }
     }
-  }*/
+  }
 
   if (IdleSpace == 0) {
     if ((resource = NekoGetDefault("idle")) != NULL) {
@@ -396,7 +396,7 @@ GetResources(void)
     if ((resource = NekoGetDefault("reverse")) != NULL) {
       ReverseVideo = IsTrue(resource);
     }
-  }
+  }*/
 
   if (Foreground == NULL) {
     Foreground = DEFAULT_FOREGROUND;
@@ -747,7 +747,7 @@ RestoreCursor(void)
 void
 Interval(void)
 {
-    pause();
+    //pause();
     if (RaiseWindowDelay>0)
       RaiseWindowDelay--;
 }
@@ -963,8 +963,8 @@ IsNekoMoveStart(void)
     if ((PrevMouseX >= MouseX - IdleSpace
 	 && PrevMouseX <= MouseX + IdleSpace) &&
 	 (PrevMouseY >= MouseY - IdleSpace 
-	 && PrevMouseY <= MouseY + IdleSpace) &&
-	(PrevTarget == theTarget)) {
+	 && PrevMouseY <= MouseY + IdleSpace) /*&&
+	(PrevTarget == theTarget)*/) {
 	return(False);
     } else {
 	return(True);
@@ -1101,13 +1101,13 @@ NekoThinkDraw(void)
 {
     //CalcDxDy();
 
-    if (NekoState != NEKO_SLEEP) {
+    /*if (NekoState != NEKO_SLEEP) {
 	DrawNeko(NekoX, NekoY,
 		AnimationPattern[NekoState][NekoTickCount & 0x1]);
     } else {
 	DrawNeko(NekoX, NekoY,
 		AnimationPattern[NekoState][(NekoTickCount >> 2) & 0x1]);
-    }
+    }*/
 
     TickCount();
 
@@ -1124,12 +1124,12 @@ NekoThinkDraw(void)
 	    SetNekoState(NEKO_L_TOGI);
 	} else if (NekoMoveDx > 0 && NekoX >= WindowWidth - BITMAP_WIDTH) {
 	    SetNekoState(NEKO_R_TOGI);
-	} else if ((NekoMoveDy < 0 && NekoY <= 0)
-		   || (ToFocus && theTarget != None && NekoY > MouseY)){
+	} else if ((NekoMoveDy < 0 && NekoY <= 0)) {
+//		   || (ToFocus && theTarget != None && NekoY > MouseY)){
 	    SetNekoState(NEKO_U_TOGI);
-	} else if ((NekoMoveDy > 0 && NekoY >= WindowHeight - BITMAP_HEIGHT)
-		   || (ToFocus && theTarget != None 
-		       &&  NekoY < MouseY - BITMAP_HEIGHT)){
+	} else if ((NekoMoveDy > 0 && NekoY >= WindowHeight - BITMAP_HEIGHT)) {
+//		   || (ToFocus && theTarget != None 
+//		       &&  NekoY < MouseY - BITMAP_HEIGHT)){
 	    SetNekoState(NEKO_D_TOGI);
 	} else {
 	    SetNekoState(NEKO_JARE);
@@ -1301,7 +1301,7 @@ NekoThinkDraw(void)
 void
 ProcessNeko(void)
 {
-  struct itimerval	Value;
+  //struct itimerval	Value;
 
   /* 猫の初期化 */
 
@@ -1315,19 +1315,19 @@ ProcessNeko(void)
 
   /* タイマー設定 */
 
-  timerclear(&Value.it_interval);
+  /*timerclear(&Value.it_interval);
   timerclear(&Value.it_value);
 
   Value.it_interval.tv_usec = IntervalTime;
   Value.it_value.tv_usec = IntervalTime;
 
-  setitimer(ITIMER_REAL, &Value, 0);
+  setitimer(ITIMER_REAL, &Value, 0);*/
 
   /* メイン処理 */
 
-  do {
+  /*do {
     NekoThinkDraw();
-  } while (ProcessEvent());
+  } while (ProcessEvent());*/
 }
 
 
@@ -1387,7 +1387,7 @@ char	*message[] = {
 "-patchlevel            : print out your current patchlevel.",
 NULL };
 
-void
+/*void
 Usage(void)
 {
   char	**mptr;
@@ -1401,14 +1401,14 @@ Usage(void)
   }
   for (loop=0;loop<BITMAPTYPES;loop++)
     fprintf(stderr,"-%s Use %s bitmaps\n",AnimalDefaultsDataTable[loop].name,AnimalDefaultsDataTable[loop].name);
-}
+}*/
 
 
 /*
  *	オプションの理解
  */
 
-Bool
+/*Bool
 GetArguments(
     int		argc,
     char	*argv[],
@@ -1539,7 +1539,7 @@ GetArguments(
   if (strlen(theDisplayName) < 1) {
     theDisplayName = NULL;
   }
-}
+}*/
 
 
 /*
@@ -1548,27 +1548,27 @@ GetArguments(
 
 int
 main(
-    int		argc,
-    char	*argv[]
+//    int		argc,
+//    char	*argv[]
 )
 {
   char	theDisplayName[MAXDISPLAYNAME];
 
-  ProgramName = argv[0];
+  //ProgramName = argv[0];
 
-  argc--;
-  argv++;
+  //argc--;
+  //argv++;
 
-  GetArguments(argc, argv, theDisplayName);
+  //GetArguments(argc, argv, theDisplayName);
 
   //XSetErrorHandler(NekoErrorHandler);
 
   InitScreen(theDisplayName);
 
-  signal(SIGALRM, NullFunction);
-  signal(SIGINT, RestoreCursor);
-  signal(SIGTERM, RestoreCursor);
-  signal(SIGQUIT, RestoreCursor);
+  //signal(SIGALRM, NullFunction);
+  //signal(SIGINT, RestoreCursor);
+  //signal(SIGTERM, RestoreCursor);
+  //signal(SIGQUIT, RestoreCursor);
 
   //SinPiPer8Times3 = sin(PI_PER8 * (double)3);
   //SinPiPer8 = sin(PI_PER8);
