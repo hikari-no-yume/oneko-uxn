@@ -10,6 +10,12 @@
 
 #include <uxn.h>
 
+// not present in uxn.h
+#define NULL 0
+#define False 0
+#define True 1
+typedef _Bool Bool;
+
 /*
  *	カーソルビットマップファイルの読み込み
  */
