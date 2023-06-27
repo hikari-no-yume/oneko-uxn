@@ -3,14 +3,14 @@
 かわいい猫がマウスカーソルを追いかけるプログラム
 .SH 書式
 .B oneko
-[¥fB-help¥fP] [¥fB-tora¥fP]
-[¥fB-dog¥fP] [¥fB-bsd_daemon¥fP] [¥fB-bsd¥fP]
-[¥fB-sakura¥fP] [¥fB-tomoyo¥fP]
-[¥fB-time¥fP ¥fIn¥fP] [¥fB-speed¥fP ¥fIn¥fP] [¥fB-idle¥fP ¥fIn¥fP]
-[¥fB-name¥fP ¥fIname¥fP] [¥fB-towindow¥fP] [¥fB-toname¥fP ¥fIname¥fP]
-[¥fB-tofocus¥fP]
-[¥fB-position¥fP ¥fIgeometry¥fP]
-[¥fB-rv¥fP] [¥fB-noshape¥fP] [¥fB-fg¥fP] [¥fB-bg¥fP]
+[\fB-help\fP] [\fB-tora\fP]
+[\fB-dog\fP] [\fB-bsd_daemon\fP] [\fB-bsd\fP]
+[\fB-sakura\fP] [\fB-tomoyo\fP]
+[\fB-time\fP \fIn\fP] [\fB-speed\fP \fIn\fP] [\fB-idle\fP \fIn\fP]
+[\fB-name\fP \fIname\fP] [\fB-towindow\fP] [\fB-toname\fP \fIname\fP]
+[\fB-tofocus\fP]
+[\fB-position\fP \fIgeometry\fP]
+[\fB-rv\fP] [\fB-noshape\fP] [\fB-fg\fP] [\fB-bg\fP]
 .SH 解説
 .I oneko
 を実行するとマウスカーソルはねずみとなり、そして小さなかわいい猫がその
@@ -40,19 +40,19 @@
 .B -tomoyo
 猫に代わり大道寺知世が走ります。
 .TP
-.BI ¥-time " interval"
+.BI \-time " interval"
 猫アニメーションの間隔を指定します。
 デフォルト値は 125000 で単位はマイクロ秒です。
 この値をより小さく指定すると猫はより速く走ります。
 .TP
-.BI ¥-speed " distance"
+.BI \-speed " distance"
 猫が一つの動作で移動する距離をドットで指定します。
 デフォルト値は 16 です。
 .TP
-.BI ¥-idle " speed"
+.BI \-idle " speed"
 逃げるねずみが猫の目を覚まさせるに至るスピードを指定します。
 .TP
-.BI ¥-name " name"
+.BI \-name " name"
 猫のウィンドウ名を指定します。
 .TP
 .B -towindow
@@ -69,7 +69,7 @@
 ウスを追いかけます。
 目標ウィンドウが閉じられるとプログラムは終了します。
 .TP
-.BI ¥-toname " name"
+.BI \-toname " name"
 猫は指定された名前のウィンドウをねずみの代わりに追いかけます。
 すでに起動している他の
 .I oneko
@@ -82,7 +82,7 @@
 猫はフォーカスウィンドウに向かって走り、そしてその上部を走ります。
 フォーカスウィンドウが見えない時には、通常のようにマウスを追いかけます。
 .TP
-.BI ¥-position " geometry"
+.BI \-position " geometry"
 X と Y のオフセットを指定して猫のねずみへの相対位置を調整します。
 .TP
 .B -rv
@@ -91,10 +91,10 @@ X と Y のオフセットを指定して猫のねずみへの相対位置を調
 .B -noshape
 SHAPE extension を使いません。
 .TP
-.BI ¥-fg " color"
+.BI \-fg " color"
 前景色。
 .TP
-.BI ¥-bg " color"
+.BI \-bg " color"
 背景色。
 .SS リソース
 アプリケーション名は neko もしくは tora で、クラス名は Oneko です。
@@ -126,7 +126,7 @@ SHAPE extension を使いたくない場合 True とします。
 このプログラムが XGetDefault を利用している以上、 neko.resouce の形式
 を使うことに留意してください。
 ハードリンクあるいはソフトリンクによって、このプログラムを tora として
-起動した場合には、デフォルトで ¥fB-tora¥fP オプションが有効となります。
+起動した場合には、デフォルトで \fB-tora\fP オプションが有効となります。
 .PP
 BSD デーモンは  Marshall Kirk McKusick 氏の著作物です。すべての権利は
 保持されています。

@@ -485,14 +485,14 @@ SetupColors()
 
     if (!XAllocNamedColor(theDisplay, theColormap,
 		Foreground, &theForegroundColor, &theExactColor)) {
-	fprintf(stderr, "%s: Can't XAllocNamedColor(¥"%s¥").¥n",
+	fprintf(stderr, "%s: Can't XAllocNamedColor(\"%s\").\n",
 		ProgramName, Foreground);
 	exit(1);
     }
 
     if (!XAllocNamedColor(theDisplay, theColormap,
 		Background, &theBackgroundColor, &theExactColor)) {
-	fprintf(stderr, "%s: Can't XAllocNamedColor(¥"%s¥").¥n",
+	fprintf(stderr, "%s: Can't XAllocNamedColor(\"%s\").\n",
 		ProgramName, Background);
 	exit(1);
     }
@@ -521,7 +521,7 @@ Window Select_Window(dpy)
 			ButtonPressMask|ButtonReleaseMask, GrabModeSync,
 			GrabModeAsync, root, cursor, CurrentTime);
   if (status != GrabSuccess) {
-    fprintf(stderr, "%s: Can't grab the mouse.¥n", ProgramName);
+    fprintf(stderr, "%s: Can't grab the mouse.\n", ProgramName);
     exit(1);
   }
 
@@ -604,9 +604,9 @@ InitScreen(DisplayName)
   if ((theDisplay = XOpenDisplay(DisplayName)) == NULL) {
     fprintf(stderr, "%s: Can't open display", ProgramName);
     if (DisplayName != NULL) {
-      fprintf(stderr, " %s.¥n", DisplayName);
+      fprintf(stderr, " %s.\n", DisplayName);
     } else {
-      fprintf(stderr, ".¥n");
+      fprintf(stderr, ".\n");
     }
     exit(1);
   }
@@ -614,14 +614,14 @@ InitScreen(DisplayName)
   GetResources();
 
   if (Synchronous == True) {
-    fprintf(stderr,"Synchronizing.¥n");
+    fprintf(stderr,"Synchronizing.\n");
     XSynchronize(theDisplay,True);
   }
 
 #ifdef SHAPE
   if (!NoShape && XShapeQueryExtension(theDisplay,
 				       &event_base, &error_base) == False) {
-    fprintf(stderr, "Display not suported shape extension.¥n");
+    fprintf(stderr, "Display not suported shape extension.\n");
     NoShape = True;
 				       }
 #endif // SHAPE
@@ -648,7 +648,7 @@ InitScreen(DisplayName)
 	if (theTarget != None) break;
       }
       if (theTarget == None) {
-	fprintf(stderr, "%s: No window with name '%s' exists.¥n",
+	fprintf(stderr, "%s: No window with name '%s' exists.\n",
 		ProgramName, TargetName);
 	exit(1);
       }
@@ -671,7 +671,7 @@ InitScreen(DisplayName)
 	  theTarget = QueryParent;
 	}
 	else {
-	  fprintf(stderr, "%s: Target Lost.¥n",ProgramName);
+	  fprintf(stderr, "%s: Target Lost.\n",ProgramName);
 	  exit(1);
 	}
       }
@@ -1028,7 +1028,7 @@ CalcDxDy()
 	XGetWindowAttributes(theDisplay, theTarget, &theTargetAttributes);
 
       if (ToWindow && status == 0) {
-	fprintf(stderr, "%s: '%s', Target Lost.¥n",ProgramName, WindowName);
+	fprintf(stderr, "%s: '%s', Target Lost.\n",ProgramName, WindowName);
 	RestoreCursor();
       }
 
@@ -1351,7 +1351,7 @@ NekoErrorHandler(dpy, err)
   else {
     char msg[80];
     XGetErrorText(dpy, err->error_code, msg, 80);
-    fprintf(stderr, "%s: Error and exit.¥n%s¥n", ProgramName, msg);
+    fprintf(stderr, "%s: Error and exit.\n%s\n", ProgramName, msg);
     exit(1);
   }
 }
@@ -1387,13 +1387,13 @@ Usage()
   int loop;
 
   mptr = message;
-  fprintf(stderr, "Usage: %s [<options>]¥n", ProgramName);
+  fprintf(stderr, "Usage: %s [<options>]\n", ProgramName);
   while (*mptr) {
-    fprintf(stderr,"%s¥n", *mptr);
+    fprintf(stderr,"%s\n", *mptr);
     mptr++;
   }
   for (loop=0;loop<BITMAPTYPES;loop++)
-    fprintf(stderr,"-%s Use %s bitmaps¥n",AnimalDefaultsDataTable[loop].name,AnimalDefaultsDataTable[loop].name);
+    fprintf(stderr,"-%s Use %s bitmaps\n",AnimalDefaultsDataTable[loop].name,AnimalDefaultsDataTable[loop].name);
 }
 
 
@@ -1412,7 +1412,7 @@ GetArguments(argc, argv, theDisplayName)
   extern int XOffset,YOffset;
   int loop,found=0;
 
-  theDisplayName[0] = '¥0';
+  theDisplayName[0] = '\0';
 
   for (ArgCounter = 0; ArgCounter < argc; ArgCounter++) {
 
@@ -1425,7 +1425,7 @@ GetArguments(argc, argv, theDisplayName)
       if (ArgCounter < argc) {
 	strcpy(theDisplayName, argv[ArgCounter]);
       } else {
-	fprintf(stderr, "%s: -display option error.¥n", ProgramName);
+	fprintf(stderr, "%s: -display option error.\n", ProgramName);
 	exit(1);
       }
     }
@@ -1434,7 +1434,7 @@ GetArguments(argc, argv, theDisplayName)
       if (ArgCounter < argc) {
 	NekoSpeed = atof(argv[ArgCounter]);
       } else {
-	fprintf(stderr, "%s: -speed option error.¥n", ProgramName);
+	fprintf(stderr, "%s: -speed option error.\n", ProgramName);
 	exit(1);
       }
     }
@@ -1443,7 +1443,7 @@ GetArguments(argc, argv, theDisplayName)
       if (ArgCounter < argc) {
 	IntervalTime = atol(argv[ArgCounter]);
       } else {
-	fprintf(stderr, "%s: -time option error.¥n", ProgramName);
+	fprintf(stderr, "%s: -time option error.\n", ProgramName);
 	exit(1);
       }
     }
@@ -1452,7 +1452,7 @@ GetArguments(argc, argv, theDisplayName)
       if (ArgCounter < argc) {
 	IdleSpace = atol(argv[ArgCounter]);
       } else {
-	fprintf(stderr, "%s: -idle option error.¥n", ProgramName);
+	fprintf(stderr, "%s: -idle option error.\n", ProgramName);
 	exit(1);
       }
     }
@@ -1461,7 +1461,7 @@ GetArguments(argc, argv, theDisplayName)
       if (ArgCounter < argc) {
 	WindowName = argv[ArgCounter];
       } else {
-	fprintf(stderr, "%s: -name option error.¥n", ProgramName);
+	fprintf(stderr, "%s: -name option error.\n", ProgramName);
 	exit(1);
       }
     }
@@ -1476,7 +1476,7 @@ GetArguments(argc, argv, theDisplayName)
 	ToWindow = True;
 	ToFocus = False;
       } else {
-	fprintf(stderr, "%s: -toname option error.¥n", ProgramName);
+	fprintf(stderr, "%s: -toname option error.\n", ProgramName);
 	exit(1);
       }
     }
@@ -1508,7 +1508,7 @@ GetArguments(argc, argv, theDisplayName)
       Synchronous = True;
     }
     else if (strcmp(argv[ArgCounter], "-patchlevel") == 0) {
-      fprintf(stderr,"Patchlevel :%s¥n",PATCHLEVEL);
+      fprintf(stderr,"Patchlevel :%s\n",PATCHLEVEL);
     }
     else {
       char *av = argv[ArgCounter] + 1;
@@ -1520,7 +1520,7 @@ GetArguments(argc, argv, theDisplayName)
       }
       if (!found) {
 	fprintf(stderr,
-		"%s: Unknown option ¥"%s¥".¥n", ProgramName,
+		"%s: Unknown option \"%s\".\n", ProgramName,
 		argv[ArgCounter]);
 	Usage();
 	exit(1);
