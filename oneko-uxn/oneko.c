@@ -624,7 +624,7 @@ InitScreen(DisplayName)
     fprintf(stderr, "Display not suported shape extension.¥n");
     NoShape = True;
 				       }
-#endif SHAPE
+#endif // SHAPE
 
   theScreen = DefaultScreen(theDisplay);
   theDepth = DefaultDepth(theDisplay, theScreen);
@@ -809,7 +809,7 @@ DrawNeko(x, y, DrawAnime)
 			  0, 0, DrawMask, ShapeSet);
 
       }
-#endif SHAPE
+#endif // SHAPE
       if (DontMapped) {
 	XMapWindow(theDisplay, theWindow);
 	DontMapped = 0;
