@@ -37,7 +37,7 @@ int Synchronous = False;
 typedef struct _AnimalDefaults {
   char *name;
   int speed, idle, bitmap_width, bitmap_height;
-  long time;
+  /*long*/ int time;
   int off_x, off_y;
   char *cursor,*mask;
   int cursor_width,cursor_height,cursor_x_hot,cursor_y_hot;
@@ -45,17 +45,17 @@ typedef struct _AnimalDefaults {
 
 AnimalDefaultsData AnimalDefaultsDataTable[] = 
 {
-  { "neko", 13, 6, 32, 32, 125000L, 0, 0, mouse_cursor_bits,mouse_cursor_mask_bits,
+  { "neko", 13, 6, 32, 32, /*125000L*/ 125, 0, 0, mouse_cursor_bits,mouse_cursor_mask_bits,
       mouse_cursor_width,mouse_cursor_height, mouse_cursor_x_hot,mouse_cursor_y_hot },
-  { "tora", 16, 6, 32, 32, 125000L, 0, 0, mouse_cursor_bits,mouse_cursor_mask_bits,
+  { "tora", 16, 6, 32, 32, /*125000L*/ 125, 0, 0, mouse_cursor_bits,mouse_cursor_mask_bits,
       mouse_cursor_width,mouse_cursor_height, mouse_cursor_x_hot,mouse_cursor_y_hot },
-  { "dog" , 10, 6, 32, 32, 125000L, 0, 0, bone_cursor_bits,bone_cursor_mask_bits,
+  { "dog" , 10, 6, 32, 32, /*125000L*/ 125, 0, 0, bone_cursor_bits,bone_cursor_mask_bits,
       bone_cursor_width,bone_cursor_height, bone_cursor_x_hot,bone_cursor_y_hot },
-  { "bsd_daemon" , 16, 6, 32, 32, 300000L, 22, 20, bsd_cursor_bits,bsd_cursor_mask_bits,
+  { "bsd_daemon" , 16, 6, 32, 32, /*300000L*/ 300, 22, 20, bsd_cursor_bits,bsd_cursor_mask_bits,
       bsd_cursor_width,bsd_cursor_height, bsd_cursor_x_hot,bsd_cursor_y_hot },
-  { "sakura" , 13, 6, 32, 32, 125000L, 0, 0, card_cursor_bits,card_cursor_mask_bits,
+  { "sakura" , 13, 6, 32, 32, /*125000L*/ 15, 0, 0, card_cursor_bits,card_cursor_mask_bits,
       card_cursor_width,card_cursor_height, card_cursor_x_hot,card_cursor_y_hot },
-  { "tomoyo" , 10, 6, 32, 32, 125000L, 32, 32, petal_cursor_bits,petal_cursor_mask_bits,
+  { "tomoyo" , 10, 6, 32, 32, /*125000L*/ 125, 32, 32, petal_cursor_bits,petal_cursor_mask_bits,
       petal_cursor_width,petal_cursor_height, petal_cursor_x_hot,petal_cursor_y_hot },
 };
 
@@ -66,7 +66,7 @@ AnimalDefaultsData AnimalDefaultsDataTable[] =
 					/* Resource:	*/
 char	*Foreground = NULL;		/*   foreground	*/
 char	*Background = NULL;		/*   background	*/
-long	IntervalTime = 0L;		/*   time	*/
+/*long*/ int	IntervalTime = 0;		/*   time	*/
 double	NekoSpeed = (double)0;		/*   speed	*/
 int	IdleSpace = 0;			/*   idle	*/
 int	NekoMoyou = NOTDEFINED;		/*   tora	*/
@@ -594,7 +594,7 @@ InitScreen(DisplayName)
     char	*DisplayName;
 {
   XSetWindowAttributes	theWindowAttributes;
-  unsigned long		theWindowMask;
+  unsigned /*long*/ int		theWindowMask;
   Window			theTempRoot;
   int				WindowPointX;
   int				WindowPointY;
