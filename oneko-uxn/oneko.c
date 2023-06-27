@@ -15,21 +15,21 @@ static char rcsid[] = "$Header: /home/sun/unix/kato/xsam/oneko/oneko.c,v 1.5 90/
 char	*ClassName = "Oneko";		/* コマンド名称 */
 char	*ProgramName;			/* コマンド名称 */
 
-Display	*theDisplay;			/* ディスプレイ構造体 */
+//Display	*theDisplay;			/* ディスプレイ構造体 */
 int	theScreen;			/* スクリーン番号 */
 unsigned int	theDepth;		/* デプス */
-Window	theRoot;			/* ルートウィンドウのＩＤ */
-Window	theWindow;			/* 猫ウィンドウのＩＤ */
+//Window	theRoot;			/* ルートウィンドウのＩＤ */
+//Window	theWindow;			/* 猫ウィンドウのＩＤ */
 char    *WindowName = NULL;		/* 猫ウィンドウの名前 */
-Window	theTarget = None;		/* 目標ウィンドウのＩＤ */
+//Window	theTarget = None;		/* 目標ウィンドウのＩＤ */
 char    *TargetName = NULL;		/* 目標ウィンドウの名前 */
-Cursor	theCursor;			/* ねずみカーソル */
+//Cursor	theCursor;			/* ねずみカーソル */
 
 unsigned int	WindowWidth;		/* ルートウィンドウの幅 */
 unsigned int	WindowHeight;		/* ルートウィンドウの高さ */
 
-XColor	theForegroundColor;		/* 色 (フォアグラウンド) */
-XColor	theBackgroundColor;		/* 色 (バックグラウンド) */
+//XColor	theForegroundColor;		/* 色 (フォアグラウンド) */
+//XColor	theBackgroundColor;		/* 色 (バックグラウンド) */
 
 int Synchronous = False;
 /* Types of animals */
@@ -91,7 +91,7 @@ int	MouseY;			/* マウスＹ座標 */
 
 int	PrevMouseX = 0;		/* 直前のマウスＸ座標 */
 int	PrevMouseY = 0;		/* 直前のマウスＹ座標 */
-Window	PrevTarget = None;	/* 直前の目標ウィンドウのＩＤ */
+//Window	PrevTarget = None;	/* 直前の目標ウィンドウのＩＤ */
 
 int	NekoX;			/* 猫Ｘ座標 */
 int	NekoY;			/* 猫Ｙ座標 */
@@ -101,7 +101,7 @@ int	NekoMoveDy;		/* 猫移動距離Ｙ */
 
 int	NekoLastX;		/* 猫最終描画Ｘ座標 */
 int	NekoLastY;		/* 猫最終描画Ｙ座標 */
-GC	NekoLastGC;		/* 猫最終描画 GC */
+//GC	NekoLastGC;		/* 猫最終描画 GC */
 /* Variables used to set how quickly the program will chose to raise itself. */
 /* Look at Interval(), Handle Visiblility Notify Event */
 #define DEFAULT_RAISE_WAIT 16  /* About 2 seconds with default interval */
@@ -113,7 +113,7 @@ int     RaiseWindowDelay=0;
 //double	SinPiPer8Times3;	/* sin(３π／８) */
 //double	SinPiPer8;		/* sin(π／８) */
 
-Pixmap	Mati2Xbm, Jare2Xbm, Kaki1Xbm, Kaki2Xbm, Mati3Xbm, Sleep1Xbm, Sleep2Xbm;
+/*Pixmap	Mati2Xbm, Jare2Xbm, Kaki1Xbm, Kaki2Xbm, Mati3Xbm, Sleep1Xbm, Sleep2Xbm;
 Pixmap	Mati2Msk, Jare2Msk, Kaki1Msk, Kaki2Msk, Mati3Msk, Sleep1Msk, Sleep2Msk;
 
 Pixmap	AwakeXbm, AwakeMsk;
@@ -141,10 +141,10 @@ GC	UpLeft1GC, UpLeft2GC, UpRight1GC, UpRight2GC, DownLeft1GC, DownLeft2GC;
 GC	DownRight1GC, DownRight2GC;
 
 GC	UpTogi1GC, UpTogi2GC, DownTogi1GC, DownTogi2GC, LeftTogi1GC;
-GC	LeftTogi2GC, RightTogi1GC, RightTogi2GC;
+GC	LeftTogi2GC, RightTogi1GC, RightTogi2GC;*/
 
 
-typedef struct {
+/*typedef struct {
     GC		*GCCreatePtr;
     Pixmap	*BitmapCreatePtr;
     char	*PixelPattern[BITMAPTYPES];
@@ -219,52 +219,52 @@ BitmapGCData	BitmapGCDataTable[] =
     { &RightTogi2GC, &RightTogi2Xbm,  rtogi2_bits, rtogi2_tora_bits, rtogi2_dog_bits, rtogi2_bsd_bits, rtogi2_sakura_bits, rtogi2_tomoyo_bits,
       &RightTogi2Msk, rtogi2_mask_bits, rtogi2_mask_bits,rtogi2_dog_mask_bits, rtogi2_bsd_mask_bits, rtogi2_sakura_mask_bits, rtogi2_tomoyo_mask_bits },
     { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
-};
+};*/
 
-typedef struct {
+/*typedef struct {
     GC		*TickGCPtr;
     Pixmap	*TickMaskPtr;
-} Animation;
+} Animation;*/
 
-Animation	AnimationPattern[][2] =
-{
-  { { &Mati2GC, &Mati2Msk },
-    { &Mati2GC, &Mati2Msk } },		/* NekoState == NEKO_STOP */
-  { { &Jare2GC, &Jare2Msk },
-    { &Mati2GC, &Mati2Msk } },		/* NekoState == NEKO_JARE */
-  { { &Kaki1GC, &Kaki1Msk },
-    { &Kaki2GC, &Kaki2Msk } },		/* NekoState == NEKO_KAKI */
-  { { &Mati3GC, &Mati3Msk },
-    { &Mati3GC, &Mati3Msk } },		/* NekoState == NEKO_AKUBI */
-  { { &Sleep1GC, &Sleep1Msk },
-    { &Sleep2GC, &Sleep2Msk } },		/* NekoState == NEKO_SLEEP */
-  { { &AwakeGC, &AwakeMsk },
-    { &AwakeGC, &AwakeMsk } },		/* NekoState == NEKO_AWAKE */
-  { { &Up1GC, &Up1Msk },
-    { &Up2GC, &Up2Msk } },		/* NekoState == NEKO_U_MOVE */
-  { { &Down1GC, &Down1Msk },
-    { &Down2GC, &Down2Msk } },		/* NekoState == NEKO_D_MOVE */
-  { { &Left1GC, &Left1Msk },
-    { &Left2GC, &Left2Msk } },		/* NekoState == NEKO_L_MOVE */
-  { { &Right1GC, &Right1Msk },
-    { &Right2GC, &Right2Msk } },		/* NekoState == NEKO_R_MOVE */
-  { { &UpLeft1GC, &UpLeft1Msk },
-    { &UpLeft2GC, &UpLeft2Msk } },	/* NekoState == NEKO_UL_MOVE */
-  { { &UpRight1GC, &UpRight1Msk },
-    { &UpRight2GC, &UpRight2Msk } },	/* NekoState == NEKO_UR_MOVE */
-  { { &DownLeft1GC, &DownLeft1Msk },
-    { &DownLeft2GC, &DownLeft2Msk } },	/* NekoState == NEKO_DL_MOVE */
-  { { &DownRight1GC, &DownRight1Msk },
-    { &DownRight2GC, &DownRight2Msk } },	/* NekoState == NEKO_DR_MOVE */
-  { { &UpTogi1GC, &UpTogi1Msk },
-    { &UpTogi2GC, &UpTogi2Msk } },	/* NekoState == NEKO_U_TOGI */
-  { { &DownTogi1GC, &DownTogi1Msk },
-    { &DownTogi2GC, &DownTogi2Msk } },	/* NekoState == NEKO_D_TOGI */
-  { { &LeftTogi1GC, &LeftTogi1Msk },
-    { &LeftTogi2GC, &LeftTogi2Msk } },	/* NekoState == NEKO_L_TOGI */
-  { { &RightTogi1GC, &RightTogi1Msk },
-    { &RightTogi2GC, &RightTogi2Msk } },	/* NekoState == NEKO_R_TOGI */
-};
+//Animation	AnimationPattern[][2] =
+//{
+//  { { &Mati2GC, &Mati2Msk },
+//    { &Mati2GC, &Mati2Msk } },		/* NekoState == NEKO_STOP */
+//  { { &Jare2GC, &Jare2Msk },
+//    { &Mati2GC, &Mati2Msk } },		/* NekoState == NEKO_JARE */
+//  { { &Kaki1GC, &Kaki1Msk },
+//    { &Kaki2GC, &Kaki2Msk } },		/* NekoState == NEKO_KAKI */
+//  { { &Mati3GC, &Mati3Msk },
+//    { &Mati3GC, &Mati3Msk } },		/* NekoState == NEKO_AKUBI */
+//  { { &Sleep1GC, &Sleep1Msk },
+//    { &Sleep2GC, &Sleep2Msk } },		/* NekoState == NEKO_SLEEP */
+//  { { &AwakeGC, &AwakeMsk },
+//    { &AwakeGC, &AwakeMsk } },		/* NekoState == NEKO_AWAKE */
+//  { { &Up1GC, &Up1Msk },
+//    { &Up2GC, &Up2Msk } },		/* NekoState == NEKO_U_MOVE */
+//  { { &Down1GC, &Down1Msk },
+//    { &Down2GC, &Down2Msk } },		/* NekoState == NEKO_D_MOVE */
+//  { { &Left1GC, &Left1Msk },
+//    { &Left2GC, &Left2Msk } },		/* NekoState == NEKO_L_MOVE */
+//  { { &Right1GC, &Right1Msk },
+//    { &Right2GC, &Right2Msk } },		/* NekoState == NEKO_R_MOVE */
+//  { { &UpLeft1GC, &UpLeft1Msk },
+//    { &UpLeft2GC, &UpLeft2Msk } },	/* NekoState == NEKO_UL_MOVE */
+//  { { &UpRight1GC, &UpRight1Msk },
+//    { &UpRight2GC, &UpRight2Msk } },	/* NekoState == NEKO_UR_MOVE */
+//  { { &DownLeft1GC, &DownLeft1Msk },
+//    { &DownLeft2GC, &DownLeft2Msk } },	/* NekoState == NEKO_DL_MOVE */
+//  { { &DownRight1GC, &DownRight1Msk },
+//    { &DownRight2GC, &DownRight2Msk } },	/* NekoState == NEKO_DR_MOVE */
+//  { { &UpTogi1GC, &UpTogi1Msk },
+//    { &UpTogi2GC, &UpTogi2Msk } },	/* NekoState == NEKO_U_TOGI */
+//  { { &DownTogi1GC, &DownTogi1Msk },
+//    { &DownTogi2GC, &DownTogi2Msk } },	/* NekoState == NEKO_D_TOGI */
+//  { { &LeftTogi1GC, &LeftTogi1Msk },
+//    { &LeftTogi2GC, &LeftTogi2Msk } },	/* NekoState == NEKO_L_TOGI */
+//  { { &RightTogi1GC, &RightTogi1Msk },
+//    { &RightTogi2GC, &RightTogi2Msk } },	/* NekoState == NEKO_R_TOGI */
+//};
 
 static void NullFunction();
 
@@ -275,7 +275,7 @@ static void NullFunction();
 void
 InitBitmapAndGCs()
 {
-    BitmapGCData	*BitmapGCDataTablePtr;
+    /*BitmapGCData	*BitmapGCDataTablePtr;
     XGCValues		theGCValues;
 
     theGCValues.function = GXcopy;
@@ -309,7 +309,7 @@ InitBitmapAndGCs()
 		GCFunction | GCForeground | GCBackground | GCTile |
 		GCTileStipXOrigin | GCTileStipYOrigin | GCFillStyle,
 		&theGCValues);
-    }
+    }*/
 }
 
 /*
@@ -322,12 +322,12 @@ char	*resource;
 {
 	char	*value;
 
-	if (value = XGetDefault(theDisplay, ProgramName, resource)) {
+	/*if (value = XGetDefault(theDisplay, ProgramName, resource)) {
 		return value;
 	}
 	if (value = XGetDefault(theDisplay, ClassName, resource)) {
 		return value;
-	}
+	}*/
 	return NULL;
 }
 
@@ -436,7 +436,7 @@ GetResources()
 
 MakeMouseCursor()
 {
-    Pixmap			theCursorSource;
+    /*Pixmap			theCursorSource;
     Pixmap			theCursorMask;
 
     theCursorSource
@@ -456,7 +456,7 @@ MakeMouseCursor()
 				    AnimalDefaultsDataTable[NekoMoyou].cursor_x_hot,
 				    AnimalDefaultsDataTable[NekoMoyou].cursor_y_hot);
     XFreePixmap(theDisplay,theCursorSource);
-    XFreePixmap(theDisplay,theCursorMask);
+    XFreePixmap(theDisplay,theCursorMask);*/
 }
 
 /*
@@ -465,7 +465,7 @@ MakeMouseCursor()
 
 SetupColors()
 {
-    XColor	theExactColor;
+    /*XColor	theExactColor;
     Colormap	theColormap;
 
     theColormap = DefaultColormap(theDisplay, theScreen);
@@ -495,7 +495,7 @@ SetupColors()
 	fprintf(stderr, "%s: Can't XAllocNamedColor(\"%s\").\n",
 		ProgramName, Background);
 	exit(1);
-    }
+    }*/
 }
 
 /*
@@ -504,51 +504,51 @@ SetupColors()
  * This routine originate in dsimple.c
  */
 
-Window Select_Window(dpy)
-     Display *dpy;
-{
-  int status;
-  Cursor cursor;
-  XEvent event;
-  Window target_win = None, root = theRoot;
-  int buttons = 0;
-
-  /* Make the target cursor */
-  cursor = theCursor;
-
-  /* Grab the pointer using target cursor, letting it room all over */
-  status = XGrabPointer(dpy, root, False,
-			ButtonPressMask|ButtonReleaseMask, GrabModeSync,
-			GrabModeAsync, root, cursor, CurrentTime);
-  if (status != GrabSuccess) {
-    fprintf(stderr, "%s: Can't grab the mouse.\n", ProgramName);
-    exit(1);
-  }
-
-  /* Let the user select a window... */
-  while ((target_win == None) || (buttons != 0)) {
-    /* allow one more event */
-    XAllowEvents(dpy, SyncPointer, CurrentTime);
-    XWindowEvent(dpy, root, ButtonPressMask|ButtonReleaseMask, &event);
-    switch (event.type) {
-    case ButtonPress:
-      if (target_win == None) {
-	target_win = event.xbutton.subwindow; /* window selected */
-	if (target_win == None) target_win = root;
-      }
-      buttons++;
-      break;
-    case ButtonRelease:
-      if (buttons > 0) /* there may have been some down before we started */
-	buttons--;
-       break;
-    }
-  } 
-
-  XUngrabPointer(dpy, CurrentTime);      /* Done with pointer */
-
-  return(target_win);
-}
+//Window Select_Window(dpy)
+//     Display *dpy;
+//{
+//  int status;
+//  Cursor cursor;
+//  XEvent event;
+//  Window target_win = None, root = theRoot;
+//  int buttons = 0;
+//
+//  /* Make the target cursor */
+//  cursor = theCursor;
+//
+//  /* Grab the pointer using target cursor, letting it room all over */
+//  status = XGrabPointer(dpy, root, False,
+//			ButtonPressMask|ButtonReleaseMask, GrabModeSync,
+//			GrabModeAsync, root, cursor, CurrentTime);
+//  if (status != GrabSuccess) {
+//    fprintf(stderr, "%s: Can't grab the mouse.\n", ProgramName);
+//    exit(1);
+//  }
+//
+//  /* Let the user select a window... */
+//  while ((target_win == None) || (buttons != 0)) {
+//    /* allow one more event */
+//    XAllowEvents(dpy, SyncPointer, CurrentTime);
+//    XWindowEvent(dpy, root, ButtonPressMask|ButtonReleaseMask, &event);
+//    switch (event.type) {
+//    case ButtonPress:
+//      if (target_win == None) {
+//	target_win = event.xbutton.subwindow; /* window selected */
+//	if (target_win == None) target_win = root;
+//      }
+//      buttons++;
+//      break;
+//    case ButtonRelease:
+//      if (buttons > 0) /* there may have been some down before we started */
+//	buttons--;
+//       break;
+//    }
+//  } 
+//
+//  XUngrabPointer(dpy, CurrentTime);      /* Done with pointer */
+//
+//  return(target_win);
+//}
 
 /*
  * Window_With_Name: routine to locate a window with a given name on a display.
@@ -559,31 +559,31 @@ Window Select_Window(dpy)
  *
  * This routine originate in dsimple.c
  */
-Window Window_With_Name(dpy, top, name)
-     Display *dpy;
-     Window top;
-     char *name;
-{
-	Window *children, dummy;
-	unsigned int nchildren;
-	int i;
-	Window w=0;
-	char *window_name;
-
-	if (XFetchName(dpy, top, &window_name) && !strcmp(window_name, name))
-	  return(top);
-
-	if (!XQueryTree(dpy, top, &dummy, &dummy, &children, &nchildren))
-	  return(0);
-
-	for (i=0; i<nchildren; i++) {
-		w = Window_With_Name(dpy, children[i], name);
-		if (w)
-		  break;
-	}
-	if (children) XFree ((char *)children);
-	return(w);
-}
+//Window Window_With_Name(dpy, top, name)
+//     Display *dpy;
+//     Window top;
+//     char *name;
+//{
+//	Window *children, dummy;
+//	unsigned int nchildren;
+//	int i;
+//	Window w=0;
+//	char *window_name;
+//
+//	if (XFetchName(dpy, top, &window_name) && !strcmp(window_name, name))
+//	  return(top);
+//
+//	if (!XQueryTree(dpy, top, &dummy, &dummy, &children, &nchildren))
+//	  return(0);
+//
+//	for (i=0; i<nchildren; i++) {
+//		w = Window_With_Name(dpy, children[i], name);
+//		if (w)
+//		  break;
+//	}
+//	if (children) XFree ((char *)children);
+//	return(w);
+//}
 
 /*
  *	スクリーン環境初期化
@@ -593,15 +593,15 @@ void
 InitScreen(DisplayName)
     char	*DisplayName;
 {
-  XSetWindowAttributes	theWindowAttributes;
-  unsigned /*long*/ int		theWindowMask;
-  Window			theTempRoot;
+  //XSetWindowAttributes	theWindowAttributes;
+  //unsigned int		theWindowMask;
+  //Window			theTempRoot;
   int				WindowPointX;
   int				WindowPointY;
   unsigned int		BorderWidth;
   int				event_base, error_base;
 
-  if ((theDisplay = XOpenDisplay(DisplayName)) == NULL) {
+  /*if ((theDisplay = XOpenDisplay(DisplayName)) == NULL) {
     fprintf(stderr, "%s: Can't open display", ProgramName);
     if (DisplayName != NULL) {
       fprintf(stderr, " %s.\n", DisplayName);
@@ -609,24 +609,24 @@ InitScreen(DisplayName)
       fprintf(stderr, ".\n");
     }
     exit(1);
-  }
+  }*/
 
   GetResources();
 
-  if (Synchronous == True) {
+  /*if (Synchronous == True) {
     fprintf(stderr,"Synchronizing.\n");
     XSynchronize(theDisplay,True);
-  }
+  }*/
 
-#ifdef SHAPE
+/*#ifdef SHAPE
   if (!NoShape && XShapeQueryExtension(theDisplay,
 				       &event_base, &error_base) == False) {
     fprintf(stderr, "Display not suported shape extension.\n");
     NoShape = True;
 				       }
-#endif // SHAPE
+#endif // SHAPE*/
 
-  theScreen = DefaultScreen(theDisplay);
+  /*theScreen = DefaultScreen(theDisplay);
   theDepth = DefaultDepth(theDisplay, theScreen);
 
   theRoot = RootWindow(theDisplay, theScreen);
@@ -634,12 +634,12 @@ InitScreen(DisplayName)
   XGetGeometry(theDisplay, theRoot, &theTempRoot,
 	       &WindowPointX, &WindowPointY,
 	       &WindowWidth, &WindowHeight,
-	       &BorderWidth, &theDepth);
+	       &BorderWidth, &theDepth);*/
 
   SetupColors();
   MakeMouseCursor();
 
-  if (ToWindow && theTarget == None) {
+  /*if (ToWindow && theTarget == None) {
     if (TargetName != NULL) {
       int i;
 
@@ -676,9 +676,9 @@ InitScreen(DisplayName)
 	}
       }
     }
-  }
+  }*/
 
-  theWindowAttributes.background_pixel = theBackgroundColor.pixel;
+  /*theWindowAttributes.background_pixel = theBackgroundColor.pixel;
   theWindowAttributes.cursor = theCursor;
   theWindowAttributes.override_redirect = True;
 
@@ -695,14 +695,14 @@ InitScreen(DisplayName)
 			    theWindowMask, &theWindowAttributes);
 
   if (WindowName == NULL) WindowName = ProgramName;
-  XStoreName(theDisplay, theWindow, WindowName);
+  XStoreName(theDisplay, theWindow, WindowName);*/
 
   InitBitmapAndGCs();
 
-  XSelectInput(theDisplay, theWindow, 
+  /*XSelectInput(theDisplay, theWindow, 
 	       ExposureMask|VisibilityChangeMask|KeyPressMask);
 
-  XFlush(theDisplay);
+  XFlush(theDisplay);*/
 }
 
 
@@ -713,7 +713,7 @@ InitScreen(DisplayName)
 void
 RestoreCursor()
 {
-  XSetWindowAttributes	theWindowAttributes;
+  /*XSetWindowAttributes	theWindowAttributes;
   BitmapGCData *BitmapGCDataTablePtr;
 
   theWindowAttributes.cursor = None;
@@ -728,7 +728,7 @@ RestoreCursor()
        }
   XFreeCursor(theDisplay,theCursor);
   XCloseDisplay(theDisplay);
-  exit(0);
+  exit(0);*/
 }
 
 
@@ -793,7 +793,7 @@ DrawNeko(x, y, DrawAnime)
     Animation	DrawAnime;
 {
 /*@@@@@@*/
-    register GC		DrawGC = *(DrawAnime.TickGCPtr);
+/*    register GC		DrawGC = *(DrawAnime.TickGCPtr);
     register Pixmap	DrawMask = *(DrawAnime.TickMaskPtr);
 
     if ((x != NekoLastX) || (y != NekoLastY)
@@ -818,12 +818,12 @@ DrawNeko(x, y, DrawAnime)
 		     0, 0, BITMAP_WIDTH, BITMAP_HEIGHT);
     }
 
-    XFlush(theDisplay);
+    XFlush(theDisplay);*/
 
     NekoLastX = x;
     NekoLastY = y;
 
-    NekoLastGC = DrawGC;
+    //NekoLastGC = DrawGC;
 }
 
 
@@ -834,10 +834,10 @@ DrawNeko(x, y, DrawAnime)
 void
 RedrawNeko()
 {
-  XFillRectangle(theDisplay, theWindow, NekoLastGC,
+  /*XFillRectangle(theDisplay, theWindow, NekoLastGC,
 		 0, 0, BITMAP_WIDTH, BITMAP_HEIGHT);
 
-  XFlush(theDisplay);
+  XFlush(theDisplay);*/
 }
 
 
@@ -1214,77 +1214,77 @@ NekoThinkDraw()
  *	キーイベント処理
  */
 
-Bool
-ProcessKeyPress(theKeyEvent)
-    XKeyEvent	*theKeyEvent;
-{
-  int			Length;
-  int			theKeyBufferMaxLen = AVAIL_KEYBUF;
-  char		theKeyBuffer[AVAIL_KEYBUF + 1];
-  KeySym		theKeySym;
-  XComposeStatus	theComposeStatus;
-  Bool		ReturnState;
-
-  ReturnState = True;
-
-  Length = XLookupString(theKeyEvent,
-			 theKeyBuffer, theKeyBufferMaxLen,
-			 &theKeySym, &theComposeStatus);
-
-  if (Length > 0) {
-    switch (theKeyBuffer[0]) {
-    case 'q':
-    case 'Q':
-      if (theKeyEvent->state & Mod1Mask) { /* META (Alt) キー */
-	ReturnState = False;
-      }
-      break;
-    default:
-      break;
-    }
-  }
-
-  return(ReturnState);
-}
+//Bool
+//ProcessKeyPress(theKeyEvent)
+//    XKeyEvent	*theKeyEvent;
+//{
+//  int			Length;
+//  int			theKeyBufferMaxLen = AVAIL_KEYBUF;
+//  char		theKeyBuffer[AVAIL_KEYBUF + 1];
+//  KeySym		theKeySym;
+//  XComposeStatus	theComposeStatus;
+//  Bool		ReturnState;
+//
+//  ReturnState = True;
+//
+//  Length = XLookupString(theKeyEvent,
+//			 theKeyBuffer, theKeyBufferMaxLen,
+//			 &theKeySym, &theComposeStatus);
+//
+//  if (Length > 0) {
+//    switch (theKeyBuffer[0]) {
+//    case 'q':
+//    case 'Q':
+//      if (theKeyEvent->state & Mod1Mask) { /* META (Alt) キー */
+//	ReturnState = False;
+//      }
+//      break;
+//    default:
+//      break;
+//    }
+//  }
+//
+//  return(ReturnState);
+//}
 
 
 /*
  *	イベント処理
  */
 
-Bool
-ProcessEvent()
-{
-    XEvent	theEvent;
-    Bool	ContinueState = True;
-
-    while (XPending(theDisplay)) {
-        XNextEvent(theDisplay,&theEvent);
-	switch (theEvent.type) {
-	case Expose:
-	    if (theEvent.xexpose.count == 0) {
-		RedrawNeko();
-	    }
-	    break;
-	case KeyPress:
-	    ContinueState = ProcessKeyPress(&theEvent);
-	    if (!ContinueState) {
-		    return(ContinueState);
-	    }
-	    break;
-	case VisibilityNotify:
-	    if (RaiseWindowDelay==0) {
-	      XRaiseWindow(theDisplay,theWindow);
-	      RaiseWindowDelay=DEFAULT_RAISE_WAIT;
-	    } 
-	default:
-	    /* Unknown Event */
-	    break;
-	}
-    }
-
-    return(ContinueState);
-}
+//Bool
+//ProcessEvent()
+//{
+//    XEvent	theEvent;
+//    Bool	ContinueState = True;
+//
+//    while (XPending(theDisplay)) {
+//        XNextEvent(theDisplay,&theEvent);
+//	switch (theEvent.type) {
+//	case Expose:
+//	    if (theEvent.xexpose.count == 0) {
+//		RedrawNeko();
+//	    }
+//	    break;
+//	case KeyPress:
+//	    ContinueState = ProcessKeyPress(&theEvent);
+//	    if (!ContinueState) {
+//		    return(ContinueState);
+//	    }
+//	    break;
+//	case VisibilityNotify:
+//	    if (RaiseWindowDelay==0) {
+//	      XRaiseWindow(theDisplay,theWindow);
+//	      RaiseWindowDelay=DEFAULT_RAISE_WAIT;
+//	    } 
+//	default:
+//	    /* Unknown Event */
+//	    break;
+//	}
+//    }
+//
+//    return(ContinueState);
+//}
 
 
 /*
@@ -1341,7 +1341,7 @@ NullFunction()
  *	エラー処理
  */
 
-int
+/*int
 NekoErrorHandler(dpy, err)
      Display		*dpy;
      XErrorEvent	*err;
@@ -1354,7 +1354,7 @@ NekoErrorHandler(dpy, err)
     fprintf(stderr, "%s: Error and exit.\n%s\n", ProgramName, msg);
     exit(1);
   }
-}
+}*/
 
 
 /*
@@ -1552,7 +1552,7 @@ main(argc, argv)
 
   GetArguments(argc, argv, theDisplayName);
 
-  XSetErrorHandler(NekoErrorHandler);
+  //XSetErrorHandler(NekoErrorHandler);
 
   InitScreen(theDisplayName);
 
