@@ -266,14 +266,14 @@ BitmapGCData	BitmapGCDataTable[] =
 //    { &RightTogi2GC, &RightTogi2Msk } },	/* NekoState == NEKO_R_TOGI */
 //};
 
-static void NullFunction();
+static void NullFunction(void);
 
 /*
  *	ビットマップデータ・GC 初期化
  */
 
 void
-InitBitmapAndGCs()
+InitBitmapAndGCs(void)
 {
     /*BitmapGCData	*BitmapGCDataTablePtr;
     XGCValues		theGCValues;
@@ -317,8 +317,9 @@ InitBitmapAndGCs()
  */
 
 char	*
-NekoGetDefault(resource)
-char	*resource;
+NekoGetDefault(
+    char	*resource
+)
 {
 	char	*value;
 
@@ -335,7 +336,8 @@ char	*resource;
  *	リソース・データベースからオプションを設定
  */
 
-GetResources()
+void
+GetResources(void)
 {
   char	*resource;
   int		num;
@@ -434,7 +436,8 @@ GetResources()
  *	ねずみ型カーソルを作る
  */
 
-MakeMouseCursor()
+void
+MakeMouseCursor(void)
 {
     /*Pixmap			theCursorSource;
     Pixmap			theCursorMask;
@@ -463,7 +466,8 @@ MakeMouseCursor()
  *	色を初期設定する
  */
 
-SetupColors()
+void
+SetupColors(void)
 {
     /*XColor	theExactColor;
     Colormap	theColormap;
@@ -590,8 +594,9 @@ SetupColors()
  */
 
 void
-InitScreen(DisplayName)
-    char	*DisplayName;
+InitScreen(
+    char	*DisplayName
+)
 {
   //XSetWindowAttributes	theWindowAttributes;
   //unsigned int		theWindowMask;
@@ -711,7 +716,7 @@ InitScreen(DisplayName)
  */
 
 void
-RestoreCursor()
+RestoreCursor(void)
 {
   /*XSetWindowAttributes	theWindowAttributes;
   BitmapGCData *BitmapGCDataTablePtr;
@@ -740,7 +745,7 @@ RestoreCursor()
  */
 
 void
-Interval()
+Interval(void)
 {
     pause();
     if (RaiseWindowDelay>0)
@@ -753,7 +758,7 @@ Interval()
  */
 
 void
-TickCount()
+TickCount(void)
 {
     if (++NekoTickCount >= MAX_TICK) {
 	NekoTickCount = 0;
@@ -772,8 +777,9 @@ TickCount()
  */
 
 void
-SetNekoState(SetValue)
-    int		SetValue;
+SetNekoState(
+    int		SetValue
+)
 {
     NekoTickCount = 0;
     NekoStateCount = 0;
@@ -787,10 +793,11 @@ SetNekoState(SetValue)
  */
 
 void
-DrawNeko(x, y, DrawAnime)
-    int		x;
-    int		y;
-    Animation	DrawAnime;
+DrawNeko(
+    int		x,
+    int		y,
+    Animation	DrawAnime
+)
 {
 /*@@@@@@*/
 /*    register GC		DrawGC = *(DrawAnime.TickGCPtr);
@@ -832,7 +839,7 @@ DrawNeko(x, y, DrawAnime)
  */
 
 void
-RedrawNeko()
+RedrawNeko(void)
 {
   /*XFillRectangle(theDisplay, theWindow, NekoLastGC,
 		 0, 0, BITMAP_WIDTH, BITMAP_HEIGHT);
@@ -849,7 +856,7 @@ RedrawNeko()
  */
 
 /*void
-NekoDirection()
+NekoDirection(void)
 {
     int			NewState;
     double		LargeX, LargeY;
@@ -908,7 +915,7 @@ NekoDirection()
  */
 
 Bool
-IsWindowOver()
+IsWindowOver(void)
 {
     Bool	ReturnValue = False;
 
@@ -936,7 +943,7 @@ IsWindowOver()
  */
 
 Bool
-IsNekoDontMove()
+IsNekoDontMove(void)
 {
     if (NekoX == NekoLastX && NekoY == NekoLastY) {
 	return(True);
@@ -951,7 +958,7 @@ IsNekoDontMove()
  */
 
 Bool
-IsNekoMoveStart()
+IsNekoMoveStart(void)
 {
     if ((PrevMouseX >= MouseX - IdleSpace
 	 && PrevMouseX <= MouseX + IdleSpace) &&
@@ -970,7 +977,7 @@ IsNekoMoveStart()
  */
 
 /*void
-CalcDxDy()
+CalcDxDy(void)
 {
     Window		QueryRoot, QueryChild;
     int			AbsoluteX, AbsoluteY;
@@ -1090,7 +1097,7 @@ CalcDxDy()
  */
 
 void
-NekoThinkDraw()
+NekoThinkDraw(void)
 {
     //CalcDxDy();
 
@@ -1253,7 +1260,7 @@ NekoThinkDraw()
  */
 
 //Bool
-//ProcessEvent()
+//ProcessEvent(void)
 //{
 //    XEvent	theEvent;
 //    Bool	ContinueState = True;
@@ -1292,7 +1299,7 @@ NekoThinkDraw()
  */
 
 void
-ProcessNeko()
+ProcessNeko(void)
 {
   struct itimerval	Value;
 
@@ -1329,7 +1336,7 @@ ProcessNeko()
  */
 
 static void
-NullFunction()
+NullFunction(void)
 {
   /* No Operation */
 #if defined(SYSV) || defined(SVR4)
@@ -1381,7 +1388,7 @@ char	*message[] = {
 NULL };
 
 void
-Usage()
+Usage(void)
 {
   char	**mptr;
   int loop;
@@ -1402,10 +1409,11 @@ Usage()
  */
 
 Bool
-GetArguments(argc, argv, theDisplayName)
-    int		argc;
-    char	*argv[];
-    char	*theDisplayName;
+GetArguments(
+    int		argc,
+    char	*argv[],
+    char	*theDisplayName
+)
 {
   int		ArgCounter;
   int    result,foo,bar;
@@ -1539,9 +1547,10 @@ GetArguments(argc, argv, theDisplayName)
  */
 
 int
-main(argc, argv)
-    int		argc;
-    char	*argv[];
+main(
+    int		argc,
+    char	*argv[]
+)
 {
   char	theDisplayName[MAXDISPLAYNAME];
 
