@@ -313,91 +313,12 @@ InitBitmapAndGCs(void)
 }
 
 /*
- *	リソース・データベースから必要なリソースを取り出す
- */
-
-char	*
-NekoGetDefault(
-    char	*resource
-)
-{
-	char	*value;
-
-	/*if (value = XGetDefault(theDisplay, ProgramName, resource)) {
-		return value;
-	}
-	if (value = XGetDefault(theDisplay, ClassName, resource)) {
-		return value;
-	}*/
-	return NULL;
-}
-
-/*
- *	リソース・データベースからオプションを設定
+ *	オプションを設定
  */
 
 void
 GetResources(void)
 {
-  char	*resource;
-  int		num;
-  int loop;
-  if (Foreground == NULL) {
-    if ((resource = NekoGetDefault("foreground")) != NULL) {
-      Foreground = resource;
-    }
-  }
-
-  if (Background == NULL) {
-    if ((resource = NekoGetDefault("background")) != NULL) {
-      Background = resource;
-    }
-  }
-
-  /*if (IntervalTime == 0) {
-    if ((resource = NekoGetDefault("time")) != NULL) {
-      if (num = atoi(resource)) {
-	IntervalTime = num;
-      }
-    }
-  }
-
-  if (NekoSpeed == (double)0) {
-    if ((resource = NekoGetDefault("speed")) != NULL) {
-      if (num = atoi(resource)) {
-	NekoSpeed = (double)num;
-      }
-    }
-  }
-
-  if (IdleSpace == 0) {
-    if ((resource = NekoGetDefault("idle")) != NULL) {
-      if (num = atoi(resource)) {
-	IdleSpace = num;
-      }
-    }
-  }
-
-  if (NekoMoyou == NOTDEFINED) {
-    for (loop=0;loop<BITMAPTYPES;loop++)
-      if ((resource = NekoGetDefault(AnimalDefaultsDataTable[loop].name)) != NULL) {
-	if (IsTrue(resource))
-	  NekoMoyou = loop;
-      }
-  }
-
-  if (NoShape == NOTDEFINED) {
-    if ((resource = NekoGetDefault("noshape")) != NULL) {
-      NoShape = IsTrue(resource);
-    }
-  }
-
-  if (ReverseVideo == NOTDEFINED) {
-    if ((resource = NekoGetDefault("reverse")) != NULL) {
-      ReverseVideo = IsTrue(resource);
-    }
-  }*/
-
   if (Foreground == NULL) {
     Foreground = DEFAULT_FOREGROUND;
   }
