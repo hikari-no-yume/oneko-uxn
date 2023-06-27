@@ -17,7 +17,6 @@ char	*ProgramName;			/* コマンド名称 */
 
 //Display	*theDisplay;			/* ディスプレイ構造体 */
 int	theScreen;			/* スクリーン番号 */
-unsigned int	theDepth;		/* デプス */
 //Window	theRoot;			/* ルートウィンドウのＩＤ */
 //Window	theWindow;			/* 猫ウィンドウのＩＤ */
 char    *WindowName = NULL;		/* 猫ウィンドウの名前 */
@@ -390,15 +389,16 @@ MakeMouseCursor(void)
 void
 SetupColors(void)
 {
+    // 0 = background = white (0xfff)
+    // 1 = foreground = black (0x000)
+    // 2, 3 = unused
+    set_palette(0xf000, 0xf000, 0xf000);
+
+    // TODO: support custom colors:
     /*XColor	theExactColor;
     Colormap	theColormap;
 
     theColormap = DefaultColormap(theDisplay, theScreen);
-
-    if (theDepth == 1) {
-	Foreground = "black";
-	Background = "white";
-    }
 
     if (ReverseVideo == True) {
 	char	*tmp;
@@ -519,48 +519,10 @@ InitScreen(
     char	*DisplayName
 )
 {
-  //XSetWindowAttributes	theWindowAttributes;
-  //unsigned int		theWindowMask;
-  //Window			theTempRoot;
-  int				WindowPointX;
-  int				WindowPointY;
-  unsigned int		BorderWidth;
-  int				event_base, error_base;
-
-  /*if ((theDisplay = XOpenDisplay(DisplayName)) == NULL) {
-    fprintf(stderr, "%s: Can't open display", ProgramName);
-    if (DisplayName != NULL) {
-      fprintf(stderr, " %s.\n", DisplayName);
-    } else {
-      fprintf(stderr, ".\n");
-    }
-    exit(1);
-  }*/
 
   GetResources();
 
-  /*if (Synchronous == True) {
-    fprintf(stderr,"Synchronizing.\n");
-    XSynchronize(theDisplay,True);
-  }*/
-
-/*#ifdef SHAPE
-  if (!NoShape && XShapeQueryExtension(theDisplay,
-				       &event_base, &error_base) == False) {
-    fprintf(stderr, "Display not suported shape extension.\n");
-    NoShape = True;
-				       }
-#endif // SHAPE*/
-
-  /*theScreen = DefaultScreen(theDisplay);
-  theDepth = DefaultDepth(theDisplay, theScreen);
-
-  theRoot = RootWindow(theDisplay, theScreen);
-
-  XGetGeometry(theDisplay, theRoot, &theTempRoot,
-	       &WindowPointX, &WindowPointY,
-	       &WindowWidth, &WindowHeight,
-	       &BorderWidth, &theDepth);*/
+  set_screen_size(256, 256);
 
   SetupColors();
   MakeMouseCursor();
