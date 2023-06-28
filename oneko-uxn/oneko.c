@@ -68,7 +68,6 @@ char	*ProgramName;			/* コマンド名称 */
 int	theScreen;			/* スクリーン番号 */
 //Window	theRoot;			/* ルートウィンドウのＩＤ */
 //Window	theWindow;			/* 猫ウィンドウのＩＤ */
-char    *WindowName = NULL;		/* 猫ウィンドウの名前 */
 Cursor	theCursor;			/* ねずみカーソル */
 
 unsigned int	WindowWidth;		/* ルートウィンドウの幅 */
@@ -972,7 +971,6 @@ char	*message[] = {
 "-speed <dots>",
 "-time <microseconds>",
 "-idle <dots>",
-"-name <name>		: set window name of neko.",
 "-rv			: Reverse video. (effects monochrome display only)",
 "-position <geometry>   : adjust position relative to mouse pointer.",
 "-debug                 : puts you in synchronous mode.",
@@ -1053,15 +1051,6 @@ GetArguments(
 	IdleSpace = atol(argv[ArgCounter]);
       } else {
 	fprintf(stderr, "%s: -idle option error.\n", ProgramName);
-	exit(1);
-      }
-    }
-    else if (strcmp(argv[ArgCounter], "-name") == 0) {
-      ArgCounter++;
-      if (ArgCounter < argc) {
-	WindowName = argv[ArgCounter];
-      } else {
-	fprintf(stderr, "%s: -name option error.\n", ProgramName);
 	exit(1);
       }
     }
