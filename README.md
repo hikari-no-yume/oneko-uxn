@@ -20,3 +20,4 @@ You can see a diff here: <https://github.com/hikari-no-yume/oneko-uxn/compare/or
 Some features have been removed:
 
 * uxn/varvara does not have a built-in windowing system, so in this port, the neko is stuck inside the window and can't follow other windows. In this way it is like the original xneko.
+* uxn/varvara does not have an equivalent of X Resources for configuration, so the X Resources support is removed. You can still use command-line options to configure it (TODO: make those work).
