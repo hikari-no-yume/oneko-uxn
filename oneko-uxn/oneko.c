@@ -299,8 +299,6 @@ Animation	AnimationPattern[][2] =
     { &RightTogi2Xbm, &RightTogi2Msk } },	/* NekoState == NEKO_R_TOGI */
 };
 
-static void NullFunction(void);
-
 /*
  *	ビットマップデータ初期化
  */
@@ -439,32 +437,6 @@ InitScreen(
 	       ExposureMask|VisibilityChangeMask|KeyPressMask);
 
   XFlush(theDisplay);*/
-}
-
-
-/*
- *	SIGINT シグナル処理
- */
-
-void
-RestoreCursor(void)
-{
-  /*XSetWindowAttributes	theWindowAttributes;
-  BitmapData *BitmapDataTablePtr;
-
-  theWindowAttributes.cursor = None;
-  XChangeWindowAttributes(theDisplay, theRoot, CWCursor,
-			  &theWindowAttributes);
-  for (BitmapDataTablePtr = BitmapDataTable;
-       BitmapDataTablePtr->GCCreatePtr != NULL;
-       BitmapDataTablePtr++) {
-    XFreePixmap(theDisplay,*(BitmapDataTablePtr->BitmapCreatePtr));
-    XFreePixmap(theDisplay,*(BitmapDataTablePtr->BitmapMasksPtr));
-    XFreeGC(theDisplay,*(BitmapDataTablePtr->GCCreatePtr));
-       }
-  XFreeCursor(theDisplay,theCursor);
-  XCloseDisplay(theDisplay);
-  exit(0);*/
 }
 
 
@@ -1000,19 +972,6 @@ ProcessNekoMain(void)
 
 
 /*
- *	SIGALRM シグナル処理
- */
-
-static void
-NullFunction(void)
-{
-  /* No Operation */
-#if defined(SYSV) || defined(SVR4)
-  signal(SIGALRM, NullFunction);
-#endif /* SYSV || SVR4 */
-}
-
-/*
  *	エラー処理
  */
 
@@ -1207,17 +1166,10 @@ main(
 
   InitScreen(theDisplayName);
 
-  //signal(SIGALRM, NullFunction);
-  //signal(SIGINT, RestoreCursor);
-  //signal(SIGTERM, RestoreCursor);
-  //signal(SIGQUIT, RestoreCursor);
-
   //SinPiPer8Times3 = sin(PI_PER8 * (double)3);
   //SinPiPer8 = sin(PI_PER8);
 
   ProcessNekoInit();
-
-  //RestoreCursor();
 }
 
 void on_screen(void)
