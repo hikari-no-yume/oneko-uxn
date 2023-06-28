@@ -69,7 +69,6 @@ int	theScreen;			/* スクリーン番号 */
 //Window	theRoot;			/* ルートウィンドウのＩＤ */
 //Window	theWindow;			/* 猫ウィンドウのＩＤ */
 char    *WindowName = NULL;		/* 猫ウィンドウの名前 */
-char    *TargetName = NULL;		/* 目標ウィンドウの名前 */
 Cursor	theCursor;			/* ねずみカーソル */
 
 unsigned int	WindowWidth;		/* ルートウィンドウの幅 */
