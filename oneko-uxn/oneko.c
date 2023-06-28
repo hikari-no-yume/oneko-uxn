@@ -69,7 +69,6 @@ int	theScreen;			/* スクリーン番号 */
 //Window	theRoot;			/* ルートウィンドウのＩＤ */
 //Window	theWindow;			/* 猫ウィンドウのＩＤ */
 char    *WindowName = NULL;		/* 猫ウィンドウの名前 */
-//Window	theTarget = None;		/* 目標ウィンドウのＩＤ */
 char    *TargetName = NULL;		/* 目標ウィンドウの名前 */
 Cursor	theCursor;			/* ねずみカーソル */
 
@@ -120,8 +119,6 @@ int	IdleSpace = 0;			/*   idle	*/
 int	NekoMoyou = NOTDEFINED;		/*   tora	*/
 int	NoShape = NOTDEFINED;		/*   noshape	*/
 int	ReverseVideo = NOTDEFINED;	/*   reverse	*/
-int	ToWindow = NOTDEFINED;		/*   towindow	*/
-int	ToFocus = NOTDEFINED;		/*   tofocus	*/
 int     XOffset=0,YOffset=0;            /* X and Y offsets for cat from mouse
 					   pointer. */
 /*
@@ -141,7 +138,6 @@ int	MouseY;			/* マウスＹ座標 */
 
 int	PrevMouseX = 0;		/* 直前のマウスＸ座標 */
 int	PrevMouseY = 0;		/* 直前のマウスＹ座標 */
-//Window	PrevTarget = None;	/* 直前の目標ウィンドウのＩＤ */
 
 int	PrevCursorX = -1;	// last X position of cursor (updated every frame)
 int	PrevCursorY = -1;	// last Y position of cursor (updated every frame)
@@ -359,12 +355,6 @@ GetResources(void)
   if (ReverseVideo == NOTDEFINED) {
     ReverseVideo = False;
   }
-  if (ToWindow == NOTDEFINED) {
-    ToWindow = False;
-  }
-  if (ToFocus == NOTDEFINED) {
-    ToFocus = False;
-  }
 }
 
 /*
@@ -425,93 +415,6 @@ SetupColors(void)
 }
 
 /*
- * Routine to let user select a window using the mouse
- *
- * This routine originate in dsimple.c
- */
-
-//Window Select_Window(dpy)
-//     Display *dpy;
-//{
-//  int status;
-//  Cursor cursor;
-//  XEvent event;
-//  Window target_win = None, root = theRoot;
-//  int buttons = 0;
-//
-//  /* Make the target cursor */
-//  cursor = theCursor;
-//
-//  /* Grab the pointer using target cursor, letting it room all over */
-//  status = XGrabPointer(dpy, root, False,
-//			ButtonPressMask|ButtonReleaseMask, GrabModeSync,
-//			GrabModeAsync, root, cursor, CurrentTime);
-//  if (status != GrabSuccess) {
-//    fprintf(stderr, "%s: Can't grab the mouse.\n", ProgramName);
-//    exit(1);
-//  }
-//
-//  /* Let the user select a window... */
-//  while ((target_win == None) || (buttons != 0)) {
-//    /* allow one more event */
-//    XAllowEvents(dpy, SyncPointer, CurrentTime);
-//    XWindowEvent(dpy, root, ButtonPressMask|ButtonReleaseMask, &event);
-//    switch (event.type) {
-//    case ButtonPress:
-//      if (target_win == None) {
-//	target_win = event.xbutton.subwindow; /* window selected */
-//	if (target_win == None) target_win = root;
-//      }
-//      buttons++;
-//      break;
-//    case ButtonRelease:
-//      if (buttons > 0) /* there may have been some down before we started */
-//	buttons--;
-//       break;
-//    }
-//  } 
-//
-//  XUngrabPointer(dpy, CurrentTime);      /* Done with pointer */
-//
-//  return(target_win);
-//}
-
-/*
- * Window_With_Name: routine to locate a window with a given name on a display.
- *                   If no window with the given name is found, 0 is returned.
- *                   If more than one window has the given name, the first
- *                   one found will be returned.  Only top and its subwindows
- *                   are looked at.  Normally, top should be the RootWindow.
- *
- * This routine originate in dsimple.c
- */
-//Window Window_With_Name(dpy, top, name)
-//     Display *dpy;
-//     Window top;
-//     char *name;
-//{
-//	Window *children, dummy;
-//	unsigned int nchildren;
-//	int i;
-//	Window w=0;
-//	char *window_name;
-//
-//	if (XFetchName(dpy, top, &window_name) && !strcmp(window_name, name))
-//	  return(top);
-//
-//	if (!XQueryTree(dpy, top, &dummy, &dummy, &children, &nchildren))
-//	  return(0);
-//
-//	for (i=0; i<nchildren; i++) {
-//		w = Window_With_Name(dpy, children[i], name);
-//		if (w)
-//		  break;
-//	}
-//	if (children) XFree ((char *)children);
-//	return(w);
-//}
-
-/*
  *	スクリーン環境初期化
  */
 
@@ -529,64 +432,6 @@ InitScreen(
 
   SetupColors();
   MakeMouseCursor();
-
-  /*if (ToWindow && theTarget == None) {
-    if (TargetName != NULL) {
-      int i;
-
-      for (i=0; i<5; i++) {
-	theTarget = Window_With_Name(theDisplay, theRoot, TargetName);
-	if (theTarget != None) break;
-      }
-      if (theTarget == None) {
-	fprintf(stderr, "%s: No window with name '%s' exists.\n",
-		ProgramName, TargetName);
-	exit(1);
-      }
-    } else {
-      theTarget = Select_Window(theDisplay);
-      if (theTarget == theRoot) {
-	theTarget = None;
-	ToWindow = False;
-      }
-    }
-    if (theTarget != None) {
-      Window		QueryRoot, QueryParent, *QueryChildren;
-      unsigned int	nchild;
-
-      for (;;) {
-	if (XQueryTree(theDisplay, theTarget, &QueryRoot,
-		       &QueryParent, &QueryChildren, &nchild)) {
-	  XFree(QueryChildren);
-	  if (QueryParent == QueryRoot) break;
-	  theTarget = QueryParent;
-	}
-	else {
-	  fprintf(stderr, "%s: Target Lost.\n",ProgramName);
-	  exit(1);
-	}
-      }
-    }
-  }*/
-
-  /*theWindowAttributes.background_pixel = theBackgroundColor.pixel;
-  theWindowAttributes.cursor = theCursor;
-  theWindowAttributes.override_redirect = True;
-
-  if (!ToWindow) XChangeWindowAttributes(theDisplay, theRoot, CWCursor,
-					 &theWindowAttributes);
-
-  theWindowMask = CWBackPixel		|
-    CWCursor		|
-      CWOverrideRedirect;
-
-  theWindow = XCreateWindow(theDisplay, theRoot, 0, 0,
-			    BITMAP_WIDTH, BITMAP_HEIGHT,
-			    0, theDepth, InputOutput, CopyFromParent,
-			    theWindowMask, &theWindowAttributes);
-
-  if (WindowName == NULL) WindowName = ProgramName;
-  XStoreName(theDisplay, theWindow, WindowName);*/
 
   InitBitmaps();
 
@@ -822,8 +667,7 @@ IsNekoMoveStart(void)
     if ((PrevMouseX >= MouseX - IdleSpace
 	 && PrevMouseX <= MouseX + IdleSpace) &&
 	 (PrevMouseY >= MouseY - IdleSpace 
-	 && PrevMouseY <= MouseY + IdleSpace) /*&&
-	(PrevTarget == theTarget)*/) {
+	 && PrevMouseY <= MouseY + IdleSpace)) {
 	return(False);
     } else {
 	return(True);
@@ -861,86 +705,12 @@ CalcDxDy(void)
 
     PrevMouseX = MouseX;
     PrevMouseY = MouseY;
-    //PrevTarget = theTarget;
 
     MouseX = mouse_x();
     MouseY = mouse_y();
 
-    /*if (ToFocus) {
-      int		revert;
-
-      XGetInputFocus(theDisplay, &theTarget, &revert);
-
-      if (theTarget != theRoot
-	  && theTarget != PointerRoot && theTarget != None) {
-	Window		QueryParent, *QueryChildren;
-	unsigned int	nchild;
-
-	for (;;) {
-	  if (XQueryTree(theDisplay, theTarget, &QueryRoot,
-			 &QueryParent, &QueryChildren, &nchild)) {
-	    XFree(QueryChildren);
-	    if (QueryParent == QueryRoot) break;
-	    theTarget = QueryParent;
-	  }
-	  else {
-	    theTarget = None;
-	    break;
-	  }
-	}
-      }
-      else {
-	theTarget = None;
-      }
-    }*/
-
-    /*if ((ToWindow || ToFocus) && theTarget != None) {
-      int			status;
-      XWindowAttributes		theTargetAttributes;
-
-      status =
-	XGetWindowAttributes(theDisplay, theTarget, &theTargetAttributes);
-
-      if (ToWindow && status == 0) {
-	fprintf(stderr, "%s: '%s', Target Lost.\n",ProgramName, WindowName);
-	RestoreCursor();
-      }
-
-      if (theTargetAttributes.x+theTargetAttributes.width > 0 
-	  && theTargetAttributes.x < (int)WindowWidth
-	  && theTargetAttributes.y+theTargetAttributes.height > 0 
-	  && theTargetAttributes.y < (int)WindowHeight
-	  && theTargetAttributes.map_state == IsViewable) {
-	if (ToFocus) {
-	  if (MouseX < theTargetAttributes.x+BITMAP_WIDTH/2)
-	    LargeX = (double)(theTargetAttributes.x + XOffset - NekoX);
-	  else if (MouseX > theTargetAttributes.x+theTargetAttributes.width
-		   -BITMAP_WIDTH/2)
-	    LargeX = (double)(theTargetAttributes.x + theTargetAttributes.width
-			      + XOffset - NekoX - BITMAP_WIDTH);
-	  else 
-	    LargeX = (double)(MouseX - NekoX - BITMAP_WIDTH / 2);
-
-	  LargeY = (double)(theTargetAttributes.y
-			    + YOffset - NekoY - BITMAP_HEIGHT);
-	}
-	else {
-	  MouseX = theTargetAttributes.x 
-	    + theTargetAttributes.width / 2 + XOffset;
-	  MouseY = theTargetAttributes.y + YOffset;
-	  LargeX = MouseX - NekoX - BITMAP_WIDTH / 2;
-	  LargeY = MouseY - NekoY - BITMAP_HEIGHT;
-	}
-      }
-      else {
-	LargeX = MouseX - NekoX - BITMAP_WIDTH / 2;
-	LargeY = MouseY - NekoY - BITMAP_HEIGHT;
-      }
-    }
-    else */ {
-      LargeX = MouseX - NekoX - BITMAP_WIDTH / 2;
-      LargeY = MouseY - NekoY - BITMAP_HEIGHT;
-    }
+    LargeX = MouseX - NekoX - BITMAP_WIDTH / 2;
+    LargeY = MouseY - NekoY - BITMAP_HEIGHT;
 
     SquaredLength = LargeX * LargeX + LargeY * LargeY;
 
@@ -992,11 +762,8 @@ NekoThinkDraw(void)
 	} else if (NekoMoveDx > 0 && NekoX >= WindowWidth - BITMAP_WIDTH) {
 	    SetNekoState(NEKO_R_TOGI);
 	} else if ((NekoMoveDy < 0 && NekoY <= 0)) {
-//		   || (ToFocus && theTarget != None && NekoY > MouseY)){
 	    SetNekoState(NEKO_U_TOGI);
 	} else if ((NekoMoveDy > 0 && NekoY >= WindowHeight - BITMAP_HEIGHT)) {
-//		   || (ToFocus && theTarget != None 
-//		       &&  NekoY < MouseY - BITMAP_HEIGHT)){
 	    SetNekoState(NEKO_D_TOGI);
 	} else {
 	    SetNekoState(NEKO_JARE);
@@ -1254,14 +1021,10 @@ NekoErrorHandler(dpy, err)
      Display		*dpy;
      XErrorEvent	*err;
 {
-  if (err->error_code==BadWindow && (ToWindow || ToFocus)) {
-  }
-  else {
-    char msg[80];
-    XGetErrorText(dpy, err->error_code, msg, 80);
-    fprintf(stderr, "%s: Error and exit.\n%s\n", ProgramName, msg);
-    exit(1);
-  }
+  char msg[80];
+  XGetErrorText(dpy, err->error_code, msg, 80);
+  fprintf(stderr, "%s: Error and exit.\n%s\n", ProgramName, msg);
+  exit(1);
 }*/
 
 
@@ -1279,9 +1042,6 @@ char	*message[] = {
 "-time <microseconds>",
 "-idle <dots>",
 "-name <name>		: set window name of neko.",
-"-towindow	       	: Neko chases selected window.",
-"-toname <name>		: Neko chases specified window.",
-"-tofocus      		: Neko runs on top of focus window",
 "-rv			: Reverse video. (effects monochrome display only)",
 "-position <geometry>   : adjust position relative to mouse pointer.",
 "-debug                 : puts you in synchronous mode.",
@@ -1373,25 +1133,6 @@ GetArguments(
 	fprintf(stderr, "%s: -name option error.\n", ProgramName);
 	exit(1);
       }
-    }
-    else if (strcmp(argv[ArgCounter], "-towindow") == 0) {
-      ToWindow = True;
-      ToFocus = False;
-    }
-    else if (strcmp(argv[ArgCounter], "-toname") == 0) {
-      ArgCounter++;
-      if (ArgCounter < argc) {
-	TargetName = argv[ArgCounter];
-	ToWindow = True;
-	ToFocus = False;
-      } else {
-	fprintf(stderr, "%s: -toname option error.\n", ProgramName);
-	exit(1);
-      }
-    }
-    else if (strcmp(argv[ArgCounter], "-tofocus") == 0) {
-      ToFocus = True;
-      ToWindow = False;
     }
     else if ((strcmp(argv[ArgCounter], "-fg") == 0) ||
 	     (strcmp(argv[ArgCounter], "-foreground") == 0)) {
