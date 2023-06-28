@@ -64,10 +64,7 @@ DrawXBM(
 char	*ClassName = "Oneko";		/* コマンド名称 */
 char	*ProgramName;			/* コマンド名称 */
 
-//Display	*theDisplay;			/* ディスプレイ構造体 */
 int	theScreen;			/* スクリーン番号 */
-//Window	theRoot;			/* ルートウィンドウのＩＤ */
-//Window	theWindow;			/* 猫ウィンドウのＩＤ */
 Cursor	theCursor;			/* ねずみカーソル */
 
 unsigned int	WindowWidth;		/* ルートウィンドウの幅 */
@@ -412,9 +409,7 @@ SetupColors(void)
  */
 
 void
-InitScreen(
-    char	*DisplayName
-)
+InitScreen(void)
 {
 
   GetResources();
@@ -427,11 +422,6 @@ InitScreen(
   MakeMouseCursor();
 
   InitBitmaps();
-
-  /*XSelectInput(theDisplay, theWindow, 
-	       ExposureMask|VisibilityChangeMask|KeyPressMask);
-
-  XFlush(theDisplay);*/
 }
 
 
@@ -965,7 +955,6 @@ NekoErrorHandler(dpy, err)
 char	*message[] = {
 "",
 "Options are:",
-"-display <display>	: Neko appears on specified display.",
 "-fg <color>		: Foreground color",
 "-bg <color>		: Background color",
 "-speed <dots>",
@@ -1001,8 +990,7 @@ Usage(void)
 /*Bool
 GetArguments(
     int		argc,
-    char	*argv[],
-    char	*theDisplayName
+    char	*argv[]
 )
 {
   int		ArgCounter;
@@ -1010,24 +998,13 @@ GetArguments(
   extern int XOffset,YOffset;
   int loop,found=0;
 
-  theDisplayName[0] = '\0';
-
   for (ArgCounter = 0; ArgCounter < argc; ArgCounter++) {
 
     if (strncmp(argv[ArgCounter], "-h", 2) == 0) {
       Usage();
       exit(0);
     }
-    if (strcmp(argv[ArgCounter], "-display") == 0) {
-      ArgCounter++;
-      if (ArgCounter < argc) {
-	strcpy(theDisplayName, argv[ArgCounter]);
-      } else {
-	fprintf(stderr, "%s: -display option error.\n", ProgramName);
-	exit(1);
-      }
-    }
-    else if (strcmp(argv[ArgCounter], "-speed") == 0) {
+    if (strcmp(argv[ArgCounter], "-speed") == 0) {
       ArgCounter++;
       if (ArgCounter < argc) {
 	NekoSpeed = atof(argv[ArgCounter]);
@@ -1097,10 +1074,6 @@ GetArguments(
       }
     }
   }
-
-  if (strlen(theDisplayName) < 1) {
-    theDisplayName = NULL;
-  }
 }*/
 
 
@@ -1114,18 +1087,16 @@ main(
 //    char	*argv[]
 )
 {
-  char	theDisplayName[MAXDISPLAYNAME];
-
   //ProgramName = argv[0];
 
   //argc--;
   //argv++;
 
-  //GetArguments(argc, argv, theDisplayName);
+  //GetArguments(argc, argv);
 
   //XSetErrorHandler(NekoErrorHandler);
 
-  InitScreen(theDisplayName);
+  InitScreen();
 
   ProcessNekoInit();
 }
