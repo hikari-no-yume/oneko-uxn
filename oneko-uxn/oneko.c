@@ -506,20 +506,6 @@ DrawNeko(
 
 
 /*
- *	猫再描画処理
- */
-
-void
-RedrawNeko(void)
-{
-  /*XFillRectangle(theDisplay, theWindow, NekoLastGC,
-		 0, 0, BITMAP_WIDTH, BITMAP_HEIGHT);
-
-  XFlush(theDisplay);*/
-}
-
-
-/*
  *	猫移動方法決定
  *
  *      This sets the direction that the neko is moving.
@@ -869,22 +855,12 @@ NekoThinkDraw(void)
 //    while (XPending(theDisplay)) {
 //        XNextEvent(theDisplay,&theEvent);
 //	switch (theEvent.type) {
-//	case Expose:
-//	    if (theEvent.xexpose.count == 0) {
-//		RedrawNeko();
-//	    }
-//	    break;
 //	case KeyPress:
 //	    ContinueState = ProcessKeyPress(&theEvent);
 //	    if (!ContinueState) {
 //		    return(ContinueState);
 //	    }
 //	    break;
-//	case VisibilityNotify:
-//	    if (RaiseWindowDelay==0) {
-//	      XRaiseWindow(theDisplay,theWindow);
-//	      RaiseWindowDelay=DEFAULT_RAISE_WAIT;
-//	    } 
 //	default:
 //	    /* Unknown Event */
 //	    break;
