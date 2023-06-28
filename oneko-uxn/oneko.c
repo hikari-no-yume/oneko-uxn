@@ -23,6 +23,40 @@ typedef struct _Cursor {
     signed char y_hot;
 } Cursor;
 
+void
+DrawXBM(
+  unsigned char *bitmap,
+  unsigned width,
+  unsigned height,
+  unsigned x,
+  unsigned y,
+  unsigned char varvara_pixel_byte
+)
+{
+  // Draw XBM bitmap by breaking it into several 8×8 1-bit Varvara sprites.
+  // Conveniently XBM pads the width to a multiple of 8, so we only need to
+  // do extra work for the height.
+
+  unsigned width_spr = (width + 7) / 8u;
+  unsigned height_spr = (height + 7) / 8u;
+
+  for (unsigned y_spr = 0; y_spr < height_spr; y_spr++) {
+    for (unsigned x_spr = 0; x_spr < width_spr; x_spr++) {
+      unsigned char sprite[8];
+      unsigned sprite_base = width_spr * (y_spr * 8u) + x_spr;
+      for (unsigned char y_row = 0; y_row < 8; y_row++) {
+        sprite[y_row] = (y_spr * 8u + y_row > height)
+                      ? 0
+                      : bitmap[sprite_base + width_spr * y_row];
+      }
+      set_screen_xy(x + x_spr * 8, y + y_spr * 8);
+      set_screen_addr(sprite);
+      // 0x10 = x-flip. XBM bit order is horizontally flipped versus Varvara.
+      draw_sprite(varvara_pixel_byte | 0x10);
+    }
+  }
+}
+
 /*
  *	グローバル変数
  */
@@ -108,6 +142,9 @@ int	MouseY;			/* マウスＹ座標 */
 int	PrevMouseX = 0;		/* 直前のマウスＸ座標 */
 int	PrevMouseY = 0;		/* 直前のマウスＹ座標 */
 //Window	PrevTarget = None;	/* 直前の目標ウィンドウのＩＤ */
+
+int	PrevCursorX = -1;	// last X position of cursor (updated every frame)
+int	PrevCursorY = -1;	// last Y position of cursor (updated every frame)
 
 int	NekoX;			/* 猫Ｘ座標 */
 int	NekoY;			/* 猫Ｙ座標 */
@@ -354,8 +391,9 @@ SetupColors(void)
 {
     // 0 = background = white (0xfff)
     // 1 = foreground = black (0x000)
-    // 2, 3 = unused
-    set_palette(0xf000, 0xf000, 0xf000);
+    // 2 = second copy of background color for masking when drawing cursor
+    // 3 = unused
+    set_palette(0xf0f0, 0xf0f0, 0xf0f0);
 
     // TODO: support custom colors:
     /*XColor	theExactColor;
@@ -638,24 +676,12 @@ DrawNeko(
     if ((x != NekoLastX) || (y != NekoLastY)
 		|| (DrawBitmap != NekoLastBitmap)) {
 
-      // clear screen
+      // clear background screen layer
       set_screen_xy(0, 0);
       draw_pixel(BgFillBR | 0);
 
+      DrawXBM(DrawBitmap, BITMAP_WIDTH, BITMAP_HEIGHT, x, y, Bg1 | 0x1);
       // TODO: masking (SHAPE)
-      // draw 32×32 XBM sprite using sixteen 8×8 1-bit varvara sprites
-      for (unsigned char y_spr = 0; y_spr < BITMAP_HEIGHT / 8u; y_spr++) {
-        for (unsigned char x_spr = 0; x_spr < BITMAP_WIDTH / 8u; x_spr++) {
-          unsigned char sprite[8];
-          unsigned sprite_base = (BITMAP_WIDTH / 8u) * (y_spr * 8u) + x_spr;
-          for (unsigned char y_row = 0; y_row < 8; y_row++) {
-            sprite[y_row] = DrawBitmap[sprite_base + (BITMAP_WIDTH / 8u) * y_row];
-          }
-          set_screen_xy(x + x_spr * 8, y + y_spr * 8);
-          set_screen_addr(sprite);
-          draw_sprite(Bg1X | 0x1);
-        }
-      }
     }
 
     NekoLastX = x;
@@ -1154,6 +1180,40 @@ ProcessNekoInit(void)
 void
 ProcessNekoMain(void)
 {
+  // draw cursor smoothly (every frame)
+
+  int CursorX = mouse_x();
+  int CursorY = mouse_y();
+  if (CursorX != PrevCursorX || CursorY != PrevCursorY) {
+    // update and redraw cursor
+    PrevCursorX = CursorX;
+    PrevCursorY = CursorY;
+
+    // clear foreground screen layer
+    set_screen_xy(0, 0);
+    draw_pixel(FgFillBR | 0);
+
+    // draw mask to foreground screen layer
+    DrawXBM(
+        theCursor.mask,
+        theCursor.width,
+        theCursor.height,
+        CursorX - theCursor.x_hot,
+        CursorY - theCursor.y_hot,
+        Fg1 | 0xa // blend mode makes 1 bits into color 2 (mask color)
+    );
+
+    // draw main bitmap to foreground screen layer
+    DrawXBM(
+        theCursor.bitmap,
+        theCursor.width,
+        theCursor.height,
+        CursorX - theCursor.x_hot,
+        CursorY - theCursor.y_hot,
+        Fg1 | 0x5 // blend mode makes 0 bits transparent (mask shows through)
+    );
+  }
+
   /* タイマー設定 */
 
   FramesSinceLastInterval++;
