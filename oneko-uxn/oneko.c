@@ -156,9 +156,6 @@ Pixmap	NekoLastBitmap;	/* 猫最終描画ビットマップ */
  *	その他
  */
 
-//double	SinPiPer8Times3;	/* sin(３π／８) */
-//double	SinPiPer8;		/* sin(π／８) */
-
 Pixmap	Mati2Xbm, Jare2Xbm, Kaki1Xbm, Kaki2Xbm, Mati3Xbm, Sleep1Xbm, Sleep2Xbm;
 Pixmap	Mati2Msk, Jare2Msk, Kaki1Msk, Kaki2Msk, Mati3Msk, Sleep1Msk, Sleep2Msk;
 
@@ -1165,9 +1162,6 @@ main(
   //XSetErrorHandler(NekoErrorHandler);
 
   InitScreen(theDisplayName);
-
-  //SinPiPer8Times3 = sin(PI_PER8 * (double)3);
-  //SinPiPer8 = sin(PI_PER8);
 
   ProcessNekoInit();
 }
