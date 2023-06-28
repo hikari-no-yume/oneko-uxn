@@ -81,7 +81,7 @@ AnimalDefaultsData AnimalDefaultsDataTable[] =
 char	*Foreground = NULL;		/*   foreground	*/
 char	*Background = NULL;		/*   background	*/
 int		IntervalTime = 0;		/*   time (milliseconds)	*/
-//double	NekoSpeed = (double)0;		/*   speed	*/
+int	NekoSpeed = 0;			/*   speed	*/
 int	IdleSpace = 0;			/*   idle	*/
 int	NekoMoyou = NOTDEFINED;		/*   tora	*/
 int	NoShape = NOTDEFINED;		/*   noshape	*/
@@ -308,9 +308,9 @@ GetResources(void)
   if (IntervalTime == 0) {
     IntervalTime = AnimalDefaultsDataTable[NekoMoyou].time;
   }
-  /*if (NekoSpeed == (double)0) {
-    NekoSpeed = (double)(AnimalDefaultsDataTable[NekoMoyou].speed);
-  }*/
+  if (NekoSpeed == 0) {
+    NekoSpeed = AnimalDefaultsDataTable[NekoMoyou].speed;
+  }
   if (IdleSpace == 0) {
     IdleSpace = AnimalDefaultsDataTable[NekoMoyou].idle;
   }
@@ -485,8 +485,8 @@ InitScreen(
 
   GetResources();
 
-  WindowWidth = 256;
-  WindowHeight = 256;
+  WindowWidth = 255;
+  WindowHeight = 255;
   set_screen_size(WindowWidth, WindowHeight);
 
   SetupColors();
@@ -637,16 +637,21 @@ DrawNeko(
 
     if ((x != NekoLastX) || (y != NekoLastY)
 		|| (DrawBitmap != NekoLastBitmap)) {
+
+      // clear screen
+      set_screen_xy(0, 0);
+      draw_pixel(BgFillBR | 0);
+
       // TODO: masking (SHAPE)
       // draw 32×32 XBM sprite using sixteen 8×8 1-bit varvara sprites
       for (unsigned char y_spr = 0; y_spr < BITMAP_HEIGHT / 8u; y_spr++) {
         for (unsigned char x_spr = 0; x_spr < BITMAP_WIDTH / 8u; x_spr++) {
           unsigned char sprite[8];
           unsigned sprite_base = (BITMAP_WIDTH / 8u) * (y_spr * 8u) + x_spr;
-          for (unsigned char y = 0; y < 8; y++) {
-            sprite[y] = DrawBitmap[sprite_base + (BITMAP_WIDTH / 8u) * y];
+          for (unsigned char y_row = 0; y_row < 8; y_row++) {
+            sprite[y_row] = DrawBitmap[sprite_base + (BITMAP_WIDTH / 8u) * y_row];
           }
-          set_screen_xy(x_spr * 8, y_spr * 8);
+          set_screen_xy(x + x_spr * 8, y + y_spr * 8);
           set_screen_addr(sprite);
           draw_sprite(Bg1X | 0x1);
         }
@@ -681,51 +686,53 @@ RedrawNeko(void)
  *
  */
 
-/*void
+void
 NekoDirection(void)
 {
     int			NewState;
-    double		LargeX, LargeY;
-    double		Length;
-    double		SinTheta;
 
     if (NekoMoveDx == 0 && NekoMoveDy == 0) {
 	NewState = NEKO_STOP;
     } else {
-	LargeX = (double)NekoMoveDx;
-	LargeY = (double)(-NekoMoveDy);
-	Length = sqrt(LargeX * LargeX + LargeY * LargeY);
-	SinTheta = LargeY / Length;
-
+	unsigned AbsDx = (NekoMoveDx >= 0) ? NekoMoveDx : -NekoMoveDx;
+	unsigned AbsDy = (NekoMoveDy >= 0) ? NekoMoveDy : -NekoMoveDy;
+	Bool XBig = (AbsDx * 2 > AbsDy);
+	Bool YBig = (AbsDy * 2 > AbsDx);
 	if (NekoMoveDx > 0) {
-	    if (SinTheta > SinPiPer8Times3) {
-		NewState = NEKO_U_MOVE;
-	    } else if ((SinTheta <= SinPiPer8Times3)
-			&& (SinTheta > SinPiPer8)) {
-		NewState = NEKO_UR_MOVE;
-	    } else if ((SinTheta <= SinPiPer8)
-			&& (SinTheta > -(SinPiPer8))) {
-		NewState = NEKO_R_MOVE;
-	    } else if ((SinTheta <= -(SinPiPer8))
-			&& (SinTheta > -(SinPiPer8Times3))) {
-		NewState = NEKO_DR_MOVE;
+	    if (NekoMoveDy < 0) {
+			if (YBig && !XBig) {
+				NewState = NEKO_U_MOVE;
+			} else if (XBig && !YBig) {
+				NewState = NEKO_R_MOVE;
+			} else {
+				NewState = NEKO_UR_MOVE;
+			}
 	    } else {
-		NewState = NEKO_D_MOVE;
+			if (YBig && !XBig) {
+				NewState = NEKO_D_MOVE;
+			} else if (XBig && !YBig) {
+				NewState = NEKO_R_MOVE;
+			} else {
+				NewState = NEKO_DR_MOVE;
+			}
 	    }
 	} else {
-	    if (SinTheta > SinPiPer8Times3) {
-		NewState = NEKO_U_MOVE;
-	    } else if ((SinTheta <= SinPiPer8Times3)
-			&& (SinTheta > SinPiPer8)) {
-		NewState = NEKO_UL_MOVE;
-	    } else if ((SinTheta <= SinPiPer8)
-			&& (SinTheta > -(SinPiPer8))) {
-		NewState = NEKO_L_MOVE;
-	    } else if ((SinTheta <= -(SinPiPer8))
-			&& (SinTheta > -(SinPiPer8Times3))) {
-		NewState = NEKO_DL_MOVE;
+	    if (NekoMoveDy < 0) {
+			if (YBig && !XBig) {
+				NewState = NEKO_U_MOVE;
+			} else if (XBig && !YBig) {
+				NewState = NEKO_L_MOVE;
+			} else {
+				NewState = NEKO_UL_MOVE;
+			}
 	    } else {
-		NewState = NEKO_D_MOVE;
+			if (YBig && !XBig) {
+				NewState = NEKO_D_MOVE;
+			} else if (XBig && !YBig) {
+				NewState = NEKO_L_MOVE;
+			} else {
+				NewState = NEKO_DL_MOVE;
+			}
 	    }
 	}
     }
@@ -733,7 +740,7 @@ NekoDirection(void)
     if (NekoState != NewState) {
 	SetNekoState(NewState);
     }
-}*/
+}
 
 
 /*
@@ -797,35 +804,43 @@ IsNekoMoveStart(void)
     }
 }
 
+// https://en.wikipedia.org/wiki/Integer_square_root#Example_implementation_in_C
+unsigned usqrt(unsigned s)
+{
+    if (s <= 1) return s;
+    unsigned x0 = s / 2;
+    unsigned x1 = (x0 + s / x0) / 2;
+    while (x1 < x0)
+    {
+         x0 = x1;
+         x1 = (x0 + s / x0) / 2;
+    }
+    return x0;
+}
 
 /*
  *	猫移動 dx, dy 計算
  */
 
-/*void
+void
 CalcDxDy(void)
 {
-    Window		QueryRoot, QueryChild;
-    int			AbsoluteX, AbsoluteY;
-    int			RelativeX, RelativeY;
-    unsigned int	ModKeyMask;
-    double		LargeX, LargeY;
-    double		DoubleLength, Length;
-
-    XQueryPointer(theDisplay, theWindow,
-		   &QueryRoot, &QueryChild,
-		   &AbsoluteX, &AbsoluteY,
-		   &RelativeX, &RelativeY,
-		   &ModKeyMask);
+    // These are used for Euclidean distance calculation. They must be big
+    // enough to hold a value as large as WindowWidth² or WindowHeight².
+    // In oneko-sakura these were `double`, but uxn does not have floats.
+    // Solution: limit window size to 255×255 (`unsigned char` limit) so that
+    // it will be ≤ 65535 (`unsigned int` limit).
+    int		LargeX, LargeY;
+    unsigned		SquaredLength, Length;
 
     PrevMouseX = MouseX;
     PrevMouseY = MouseY;
-    PrevTarget = theTarget;
+    //PrevTarget = theTarget;
 
-    MouseX = AbsoluteX+XOffset;
-    MouseY = AbsoluteY+YOffset;
+    MouseX = mouse_x();
+    MouseY = mouse_y();
 
-    if (ToFocus) {
+    /*if (ToFocus) {
       int		revert;
 
       XGetInputFocus(theDisplay, &theTarget, &revert);
@@ -851,9 +866,9 @@ CalcDxDy(void)
       else {
 	theTarget = None;
       }
-    }
+    }*/
 
-    if ((ToWindow || ToFocus) && theTarget != None) {
+    /*if ((ToWindow || ToFocus) && theTarget != None) {
       int			status;
       XWindowAttributes		theTargetAttributes;
 
@@ -887,35 +902,35 @@ CalcDxDy(void)
 	  MouseX = theTargetAttributes.x 
 	    + theTargetAttributes.width / 2 + XOffset;
 	  MouseY = theTargetAttributes.y + YOffset;
-	  LargeX = (double)(MouseX - NekoX - BITMAP_WIDTH / 2);
-	  LargeY = (double)(MouseY - NekoY - BITMAP_HEIGHT);	
+	  LargeX = MouseX - NekoX - BITMAP_WIDTH / 2;
+	  LargeY = MouseY - NekoY - BITMAP_HEIGHT;
 	}
       }
       else {
-	LargeX = (double)(MouseX - NekoX - BITMAP_WIDTH / 2);
-	LargeY = (double)(MouseY - NekoY - BITMAP_HEIGHT);
+	LargeX = MouseX - NekoX - BITMAP_WIDTH / 2;
+	LargeY = MouseY - NekoY - BITMAP_HEIGHT;
       }
     }
-    else {
-      LargeX = (double)(MouseX - NekoX - BITMAP_WIDTH / 2);
-      LargeY = (double)(MouseY - NekoY - BITMAP_HEIGHT);
+    else */ {
+      LargeX = MouseX - NekoX - BITMAP_WIDTH / 2;
+      LargeY = MouseY - NekoY - BITMAP_HEIGHT;
     }
 
-    DoubleLength = LargeX * LargeX + LargeY * LargeY;
+    SquaredLength = LargeX * LargeX + LargeY * LargeY;
 
-    if (DoubleLength != (double)0) {
-	Length = sqrt(DoubleLength);
+    if (SquaredLength != 0) {
+	Length = usqrt(SquaredLength);
 	if (Length <= NekoSpeed) {
-	    NekoMoveDx = (int)LargeX;
-	    NekoMoveDy = (int)LargeY;
+	    NekoMoveDx = LargeX;
+	    NekoMoveDy = LargeY;
 	} else {
-	    NekoMoveDx = (int)((NekoSpeed * LargeX) / Length);
-	    NekoMoveDy = (int)((NekoSpeed * LargeY) / Length);
+	    NekoMoveDx = ((NekoSpeed * LargeX) / (signed)Length);
+	    NekoMoveDy = ((NekoSpeed * LargeY) / (signed)Length);
 	}
     } else {
 	NekoMoveDx = NekoMoveDy = 0;
     }
-}*/
+}
 
 
 /*
@@ -925,7 +940,7 @@ CalcDxDy(void)
 void
 NekoThinkDraw(void)
 {
-    //CalcDxDy();
+    CalcDxDy();
 
     if (NekoState != NEKO_SLEEP) {
 	DrawNeko(NekoX, NekoY,
@@ -1001,7 +1016,7 @@ NekoThinkDraw(void)
 	if (NekoStateCount < NEKO_AWAKE_TIME) {
 	    break;
 	}
-	//NekoDirection();	/* 猫が動く向きを求める */
+	NekoDirection();	/* 猫が動く向きを求める */
 	break;
     case NEKO_U_MOVE:
     case NEKO_D_MOVE:
@@ -1013,7 +1028,7 @@ NekoThinkDraw(void)
     case NEKO_DR_MOVE:
 	NekoX += NekoMoveDx;
 	NekoY += NekoMoveDy;
-	//NekoDirection();
+	NekoDirection();
 	if (IsWindowOver()) {
 	    if (IsNekoDontMove()) {
 		SetNekoState(NEKO_STOP);
