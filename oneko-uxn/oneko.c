@@ -637,15 +637,20 @@ DrawNeko(
 
     if ((x != NekoLastX) || (y != NekoLastY)
 		|| (DrawBitmap != NekoLastBitmap)) {
-
-      // TODO: more efficient drawing
       // TODO: masking (SHAPE)
-      for (unsigned char y = 0; y < BITMAP_HEIGHT; y++) {
-        for (unsigned char x = 0; x < BITMAP_WIDTH; x++) {
-          set_screen_xy(x, y);
-          draw_pixel((DrawBitmap[(unsigned)(BITMAP_WIDTH * y + x) >> 3] >> ((BITMAP_WIDTH * y + x) & 7)) & 1);
-	   }
-     }
+      // draw 32×32 XBM sprite using sixteen 8×8 1-bit varvara sprites
+      for (unsigned char y_spr = 0; y_spr < BITMAP_HEIGHT / 8u; y_spr++) {
+        for (unsigned char x_spr = 0; x_spr < BITMAP_WIDTH / 8u; x_spr++) {
+          unsigned char sprite[8];
+          unsigned sprite_base = (BITMAP_WIDTH / 8u) * (y_spr * 8u) + x_spr;
+          for (unsigned char y = 0; y < 8; y++) {
+            sprite[y] = DrawBitmap[sprite_base + (BITMAP_WIDTH / 8u) * y];
+          }
+          set_screen_xy(x_spr * 8, y_spr * 8);
+          set_screen_addr(sprite);
+          draw_sprite(Bg1X | 0x1);
+        }
+      }
     }
 
     NekoLastX = x;
