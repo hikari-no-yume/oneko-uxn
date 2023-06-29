@@ -955,7 +955,7 @@ NekoErrorHandler(dpy, err)
 char	*message[] = {
 "",
 "Options are:",
-"-fg <color>		: Foreground color",
+/*"-fg <color>		: Foreground color",
 "-bg <color>		: Background color",
 "-speed <dots>",
 "-time <microseconds>",
@@ -963,31 +963,79 @@ char	*message[] = {
 "-rv			: Reverse video. (effects monochrome display only)",
 "-position <geometry>   : adjust position relative to mouse pointer.",
 "-debug                 : puts you in synchronous mode.",
-"-patchlevel            : print out your current patchlevel.",
+"-patchlevel            : print out your current patchlevel.",*/
 NULL };
 
-/*void
+void
+eprint(
+    char	*str
+)
+{
+  while (*str) console_error(*str++);
+}
+
+void
 Usage(void)
 {
   char	**mptr;
   int loop;
 
   mptr = message;
-  fprintf(stderr, "Usage: %s [<options>]\n", ProgramName);
+  eprint("Usage: ");
+  eprint(ProgramName);
+  eprint(" [<options>]\n");
   while (*mptr) {
-    fprintf(stderr,"%s\n", *mptr);
+    eprint(*mptr);
+    eprint("\n");
     mptr++;
   }
-  for (loop=0;loop<BITMAPTYPES;loop++)
-    fprintf(stderr,"-%s Use %s bitmaps\n",AnimalDefaultsDataTable[loop].name,AnimalDefaultsDataTable[loop].name);
-}*/
+  for (loop=0;loop<BITMAPTYPES;loop++) {
+    eprint("-");
+    eprint(AnimalDefaultsDataTable[loop].name);
+    eprint(" Use ");
+    eprint(AnimalDefaultsDataTable[loop].name);
+    eprint(" bitmaps\n");
+  }
+}
 
+int
+strcmp(
+    char	*a,
+    char	*b
+)
+{
+  for (;;) {
+    char ac = *a++;
+    char bc = *b++;
+    if (ac - bc || (!ac && !bc)) {
+      return ac - bc;
+    }
+  }
+}
+int
+strncmp(
+    char		*a,
+    char		*b,
+    unsigned	n
+)
+{
+  if (n == 0) {
+    return 0;
+  }
+  for (;;) {
+    char ac = *a++;
+    char bc = *b++;
+    if (ac - bc || (!ac && !bc) || !--n) {
+      return ac - bc;
+    }
+  }
+}
 
 /*
  *	オプションの理解
  */
 
-/*Bool
+Bool
 GetArguments(
     int		argc,
     char	*argv[]
@@ -1004,7 +1052,7 @@ GetArguments(
       Usage();
       exit(0);
     }
-    if (strcmp(argv[ArgCounter], "-speed") == 0) {
+    /*if (strcmp(argv[ArgCounter], "-speed") == 0) {
       ArgCounter++;
       if (ArgCounter < argc) {
 	NekoSpeed = atof(argv[ArgCounter]);
@@ -1057,7 +1105,7 @@ GetArguments(
     else if (strcmp(argv[ArgCounter], "-patchlevel") == 0) {
       fprintf(stderr,"Patchlevel :%s\n",PATCHLEVEL);
     }
-    else {
+    else*/ {
       char *av = argv[ArgCounter] + 1;
       if (strcmp(av, "bsd") == 0)
 	av = "bsd_daemon";
@@ -1066,15 +1114,16 @@ GetArguments(
 	  {NekoMoyou = loop;found=1;}
       }
       if (!found) {
-	fprintf(stderr,
-		"%s: Unknown option \"%s\".\n", ProgramName,
-		argv[ArgCounter]);
+	eprint(ProgramName);
+	eprint(": Unknown option \"");
+	eprint(argv[ArgCounter]);
+	eprint("\".\n");
 	Usage();
 	exit(1);
       }
     }
   }
-}*/
+}
 
 
 /*
@@ -1083,16 +1132,16 @@ GetArguments(
 
 int
 main(
-//    int		argc,
-//    char	*argv[]
+    int		argc,
+    char	*argv[]
 )
 {
-  //ProgramName = argv[0];
+  ProgramName = "oneko-uxn";
 
-  //argc--;
-  //argv++;
+  argc--;
+  argv++;
 
-  //GetArguments(argc, argv);
+  GetArguments(argc, argv);
 
   //XSetErrorHandler(NekoErrorHandler);
 
