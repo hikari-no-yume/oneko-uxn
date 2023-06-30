@@ -1,6 +1,8 @@
 oneko-uxn
 =========
 
+[日本語版 README はこちら](./README-ja.md)
+
 This is a port of [oneko-sakura](http://www.daidouji.com/oneko/) to [uxn](https://wiki.xxiivv.com/site/uxn.html) using [chibicc-uxn](https://github.com/lynn/chibicc).
 
 Manual
