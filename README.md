@@ -7,6 +7,8 @@ This is a port of [oneko-sakura](http://www.daidouji.com/oneko/) to [uxn](https:
 
 ![](screenshot.png)
 
+[Download the uxn ROM here](https://github.com/hikari-no-yume/oneko-uxn/releases/download/1.2.sakura.5.uxn.1/1.2.sakura.5.uxn.1.zip)
+
 Warning: If you run `uxnemu oneko-uxn.rom` and just get a black screen, this is due [a bug in uxnemu that was only fixed very recently](https://lists.sr.ht/~rabbits/public-inbox/%3C536EBE67-0820-49FF-BBAF-50FBE4DFEF97%40noyu.me%3E). The workaround is to add at least one option, e.g. `uxnemu oneko-uxn.rom -neko`.
 
 Manual
