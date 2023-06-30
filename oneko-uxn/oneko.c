@@ -969,22 +969,6 @@ ProcessNekoMain(void)
 
 
 /*
- *	エラー処理
- */
-
-/*int
-NekoErrorHandler(dpy, err)
-     Display		*dpy;
-     XErrorEvent	*err;
-{
-  char msg[80];
-  XGetErrorText(dpy, err->error_code, msg, 80);
-  fprintf(stderr, "%s: Error and exit.\n%s\n", ProgramName, msg);
-  exit(1);
-}*/
-
-
-/*
  *	Usage
  */
 
@@ -1180,8 +1164,6 @@ main(
   argv++;
 
   GetArguments(argc, argv);
-
-  //XSetErrorHandler(NekoErrorHandler);
 
   InitScreen();
 
