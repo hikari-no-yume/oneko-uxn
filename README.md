@@ -1,8 +1,6 @@
 oneko-uxn
 =========
 
-> The program oneko creates a cute cat chasing around your mouse cursor.
-
 This is a port of [oneko-sakura](http://www.daidouji.com/oneko/) to [uxn](https://wiki.xxiivv.com/site/uxn.html) using [chibicc-uxn](https://github.com/lynn/chibicc).
 
 Manual
