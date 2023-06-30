@@ -53,8 +53,8 @@ typedef _Bool Bool;
 #define	AVAIL_KEYBUF		255
 #define	MAX_TICK		9999		/* Odd Only! */
 
-#define	DEFAULT_FOREGROUND	"black"		/* フォアグラウンドカラー */
-#define	DEFAULT_BACKGROUND	"white"		/* バックグラウンドカラー */
+#define	DEFAULT_FOREGROUND	"000"		/* フォアグラウンドカラー */
+#define	DEFAULT_BACKGROUND	"fff"		/* バックグラウンドカラー */
 
 /*
  *	猫の状態定数

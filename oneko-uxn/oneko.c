@@ -70,9 +70,6 @@ Cursor	theCursor;			/* ねずみカーソル */
 unsigned int	WindowWidth;		/* ルートウィンドウの幅 */
 unsigned int	WindowHeight;		/* ルートウィンドウの高さ */
 
-//XColor	theForegroundColor;		/* 色 (フォアグラウンド) */
-//XColor	theBackgroundColor;		/* 色 (バックグラウンド) */
-
 int Synchronous = False;
 /* Types of animals */
 #define BITMAPTYPES 6
@@ -362,6 +359,29 @@ MakeMouseCursor(void)
     theCursor.y_hot = AnimalDefaultsDataTable[NekoMoyou].cursor_y_hot;
 }
 
+int
+ParseHexColor(
+    char	*color_hex
+)
+{
+  unsigned color = 0x000;
+  for (unsigned i = 0; i < 3; i++) {
+    color <<= 4;
+    char digit = *(color_hex++);
+    if ('0' <= digit && digit <= '9') {
+      color |= digit - '0';
+    } else if ('a' <= digit && digit <= 'f') {
+      color |= 0xa + (digit - 'a');
+    } else {
+      return -1;
+    }
+  }
+  if (*color_hex != '\0') {
+    return -1;
+  }
+  return color;
+}
+
 /*
  *	色を初期設定する
  */
@@ -369,18 +389,6 @@ MakeMouseCursor(void)
 void
 SetupColors(void)
 {
-    // 0 = background = white (0xfff)
-    // 1 = foreground = black (0x000)
-    // 2 = second copy of background color for masking when drawing cursor
-    // 3 = unused
-    set_palette(0xf0f0, 0xf0f0, 0xf0f0);
-
-    // TODO: support custom colors:
-    /*XColor	theExactColor;
-    Colormap	theColormap;
-
-    theColormap = DefaultColormap(theDisplay, theScreen);
-
     if (ReverseVideo == True) {
 	char	*tmp;
 
@@ -389,19 +397,33 @@ SetupColors(void)
 	Background = tmp;
     }
 
-    if (!XAllocNamedColor(theDisplay, theColormap,
-		Foreground, &theForegroundColor, &theExactColor)) {
-	fprintf(stderr, "%s: Can't XAllocNamedColor(\"%s\").\n",
-		ProgramName, Foreground);
+    unsigned fg = ParseHexColor(Foreground);
+    if (fg == -1) {
+	eprint(ProgramName);
+	eprint(": Can't parse color \"");
+	eprint(Foreground);
+	eprint("\" (should be three hex digits).\n");
 	exit(1);
     }
 
-    if (!XAllocNamedColor(theDisplay, theColormap,
-		Background, &theBackgroundColor, &theExactColor)) {
-	fprintf(stderr, "%s: Can't XAllocNamedColor(\"%s\").\n",
-		ProgramName, Background);
+    unsigned bg = ParseHexColor(Background);
+    if (bg == -1) {
+	eprint(ProgramName);
+	eprint(": Can't parse color \"");
+	eprint(Background);
+	eprint("\" (should be three hex digits).\n");
 	exit(1);
-    }*/
+    }
+
+    // 0 = background
+    // 1 = foreground
+    // 2 = second copy of background color for masking when drawing cursor
+    // 3 = unused
+    set_palette(
+	((bg >> 8) << 12) | ((fg >> 8) << 8) | ((bg >> 8) << 4),
+	(((bg >> 4) & 0xf) << 12) | (((fg >> 4) & 0xf) << 8) | (((bg >> 4) & 0xf) << 4),
+	((bg & 0xf) << 12) | ((fg & 0xf) << 8) | ((bg & 0xf) << 4)
+    );
 }
 
 /*
@@ -955,13 +977,13 @@ NekoErrorHandler(dpy, err)
 char	*message[] = {
 "",
 "Options are:",
-/*"-fg <color>		: Foreground color",
+"-fg <color>		: Foreground color",
 "-bg <color>		: Background color",
-"-speed <dots>",
+/*"-speed <dots>",
 "-time <microseconds>",
-"-idle <dots>",
+"-idle <dots>",*/
 "-rv			: Reverse video. (effects monochrome display only)",
-"-position <geometry>   : adjust position relative to mouse pointer.",
+/*"-position <geometry>   : adjust position relative to mouse pointer.",
 "-debug                 : puts you in synchronous mode.",
 "-patchlevel            : print out your current patchlevel.",*/
 NULL };
@@ -1078,7 +1100,7 @@ GetArguments(
 	fprintf(stderr, "%s: -idle option error.\n", ProgramName);
 	exit(1);
       }
-    }
+    }*/
     else if ((strcmp(argv[ArgCounter], "-fg") == 0) ||
 	     (strcmp(argv[ArgCounter], "-foreground") == 0)) {
       ArgCounter++;
@@ -1092,7 +1114,7 @@ GetArguments(
     else if (strcmp(argv[ArgCounter], "-rv") == 0) {
       ReverseVideo = True;
     }
-    else if (strcmp(argv[ArgCounter], "-noshape") == 0) {
+    /*else if (strcmp(argv[ArgCounter], "-noshape") == 0) {
       NoShape = True;
     }
     else if (strcmp(argv[ArgCounter], "-position") == 0) {
@@ -1104,8 +1126,8 @@ GetArguments(
     }
     else if (strcmp(argv[ArgCounter], "-patchlevel") == 0) {
       fprintf(stderr,"Patchlevel :%s\n",PATCHLEVEL);
-    }
-    else*/ {
+    }*/
+    else {
       char *av = argv[ArgCounter] + 1;
       if (strcmp(av, "bsd") == 0)
 	av = "bsd_daemon";
