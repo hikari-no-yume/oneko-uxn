@@ -105,11 +105,11 @@ AnimalDefaultsData AnimalDefaultsDataTable[] =
 					/* Resource:	*/
 char	*Foreground = NULL;		/*   foreground	*/
 char	*Background = NULL;		/*   background	*/
+char	*MaskColor = NULL;		/*   mask color (if != background) */
 int		IntervalTime = 0;		/*   time (milliseconds)	*/
 int	NekoSpeed = 0;			/*   speed	*/
 int	IdleSpace = 0;			/*   idle	*/
 int	NekoMoyou = NOTDEFINED;		/*   tora	*/
-int	NoShape = NOTDEFINED;		/*   noshape	*/
 int	ReverseVideo = NOTDEFINED;	/*   reverse	*/
 int     XOffset=0,YOffset=0;            /* X and Y offsets for cat from mouse
 					   pointer. */
@@ -336,9 +336,6 @@ GetResources(void)
   }
   XOffset = XOffset + AnimalDefaultsDataTable[NekoMoyou].off_x;
   YOffset = YOffset + AnimalDefaultsDataTable[NekoMoyou].off_y;
-  if (NoShape == NOTDEFINED) {
-    NoShape = False;
-  }
   if (ReverseVideo == NOTDEFINED) {
     ReverseVideo = False;
   }
@@ -415,14 +412,20 @@ SetupColors(void)
 	exit(1);
     }
 
-    // 0 = background
-    // 1 = foreground
-    // 2 = second copy of background color for masking when drawing cursor
-    // 3 = unused
+    unsigned mask = (MaskColor == NULL) ? bg : ParseHexColor(MaskColor);
+    if (mask == -1) {
+	eprint(ProgramName);
+	eprint(": Can't parse color \"");
+	eprint(MaskColor);
+	eprint("\" (should be three hex digits).\n");
+	exit(1);
+    }
+
+    // palette: 0 = background, 1 = foreground, 2 = mask, 3 = unused
     set_palette(
-	((bg >> 8) << 12) | ((fg >> 8) << 8) | ((bg >> 8) << 4),
-	(((bg >> 4) & 0xf) << 12) | (((fg >> 4) & 0xf) << 8) | (((bg >> 4) & 0xf) << 4),
-	((bg & 0xf) << 12) | ((fg & 0xf) << 8) | ((bg & 0xf) << 4)
+	((bg >> 8) << 12) | ((fg >> 8) << 8) | ((mask >> 8) << 4),
+	(((bg >> 4) & 0xf) << 12) | (((fg >> 4) & 0xf) << 8) | (((mask >> 4) & 0xf) << 4),
+	((bg & 0xf) << 12) | ((fg & 0xf) << 8) | ((mask & 0xf) << 4)
     );
 }
 
@@ -490,12 +493,12 @@ void
 DrawNeko(
     int		x,
     int		y,
-    Animation	DrawAnime
+    Animation	*DrawAnime
 )
 {
 /*@@@@@@*/
-    /*register*/ Pixmap	DrawBitmap = *(DrawAnime.TickBitmapPtr);
-    /*register*/ Pixmap	DrawMask = *(DrawAnime.TickMaskPtr);
+    /*register*/ Pixmap	DrawBitmap = *(DrawAnime->TickBitmapPtr);
+    /*register*/ Pixmap	DrawMask = *(DrawAnime->TickMaskPtr);
 
     if ((x != NekoLastX) || (y != NekoLastY)
 		|| (DrawBitmap != NekoLastBitmap)) {
@@ -504,8 +507,14 @@ DrawNeko(
       set_screen_xy(0, 0);
       draw_pixel(BgFillBR | 0);
 
-      DrawXBM(DrawBitmap, BITMAP_WIDTH, BITMAP_HEIGHT, x, y, Bg1 | 0x1);
-      // TODO: masking (SHAPE)
+      if (MaskColor == NULL) {
+        DrawXBM(DrawBitmap, BITMAP_WIDTH, BITMAP_HEIGHT, x, y, Bg1 | 0x1);
+      } else {
+        // blend mode makes 1 bits into color 2 (mask color)
+        DrawXBM(DrawMask, BITMAP_WIDTH, BITMAP_HEIGHT, x, y, Bg1 | 0xa);
+        // blend mode makes 0 bits transparent (mask shows through)
+        DrawXBM(DrawBitmap, BITMAP_WIDTH, BITMAP_HEIGHT, x, y, Bg1 | 0x5);
+      }
     }
 
     NekoLastX = x;
@@ -705,10 +714,10 @@ NekoThinkDraw(void)
 
     if (NekoState != NEKO_SLEEP) {
 	DrawNeko(NekoX, NekoY,
-		AnimationPattern[NekoState][NekoTickCount & 0x1]);
+		&AnimationPattern[NekoState][NekoTickCount & 0x1]);
     } else {
 	DrawNeko(NekoX, NekoY,
-		AnimationPattern[NekoState][(NekoTickCount >> 2) & 0x1]);
+		&AnimationPattern[NekoState][(NekoTickCount >> 2) & 0x1]);
     }
 
     TickCount();
@@ -979,6 +988,7 @@ char	*message[] = {
 "Options are:",
 "-fg <color>		: Foreground color",
 "-bg <color>		: Background color",
+"-mask <color>		: Mask color",
 /*"-speed <dots>",
 "-time <microseconds>",
 "-idle <dots>",*/
@@ -1111,13 +1121,14 @@ GetArguments(
       ArgCounter++;
       Background = argv[ArgCounter];
 	     }
+    else if ((strcmp(argv[ArgCounter], "-mask") == 0)) {
+      ArgCounter++;
+      MaskColor = argv[ArgCounter];
+	     }
     else if (strcmp(argv[ArgCounter], "-rv") == 0) {
       ReverseVideo = True;
     }
-    /*else if (strcmp(argv[ArgCounter], "-noshape") == 0) {
-      NoShape = True;
-    }
-    else if (strcmp(argv[ArgCounter], "-position") == 0) {
+    /*else if (strcmp(argv[ArgCounter], "-position") == 0) {
       ArgCounter++;
       result=XParseGeometry(argv[ArgCounter],&XOffset,&YOffset,&foo,&bar);
     }

@@ -35,7 +35,7 @@ typedef _Bool Bool;
 #include "bitmaps/sakura/sakura.include"
 #include "bitmaps/tomoyo/tomoyo.include"
 
-/* These are the bitmasks that allow the use of the shape extension. */
+/* These are the bitmasks that allow the use of the -mask option. */
 
 #include "bitmasks/neko/neko.mask.include"
 #include "bitmasks/dog/dog.mask.include"

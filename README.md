@@ -17,7 +17,15 @@ Changes from oneko-sakura
 
 You can see a diff here: <https://github.com/hikari-no-yume/oneko-uxn/compare/original-UTF-8..trunk>.
 
-Some features have been removed:
+New features:
+
+* `-mask` lets you give the neko/cursor mask a different color to the background
+
+Changed features:
+
+* `-fg`/`-foreground` and `-bg`/`-background` use uxn-style 3-digit hex colours (e.g. `f77` for pink #ff7777)
+
+Removed features:
 
 * uxn/varvara does not have a built-in windowing system, so in this port, the neko is stuck inside the window and can't follow other windows. In this way it is like the original xneko.
 * uxn/varvara does not have an equivalent of X Resources for configuration, so the X Resources support is removed. You can still use command-line options to configure it (TODO: make those work).
