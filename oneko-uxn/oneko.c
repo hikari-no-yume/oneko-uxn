@@ -64,13 +64,11 @@ DrawXBM(
 char	*ClassName = "Oneko";		/* コマンド名称 */
 char	*ProgramName;			/* コマンド名称 */
 
-int	theScreen;			/* スクリーン番号 */
 Cursor	theCursor;			/* ねずみカーソル */
 
 unsigned int	WindowWidth;		/* ルートウィンドウの幅 */
 unsigned int	WindowHeight;		/* ルートウィンドウの高さ */
 
-int Synchronous = False;
 /* Types of animals */
 #define BITMAPTYPES 6
 typedef struct _AnimalDefaults {
@@ -983,7 +981,6 @@ char	*message[] = {
 "-idle <dots>",*/
 "-rv			: Reverse video. (effects monochrome display only)",
 /*"-position <geometry>   : adjust position relative to mouse pointer.",
-"-debug                 : puts you in synchronous mode.",
 "-patchlevel            : print out your current patchlevel.",*/
 NULL };
 
@@ -1120,9 +1117,6 @@ GetArguments(
     /*else if (strcmp(argv[ArgCounter], "-position") == 0) {
       ArgCounter++;
       result=XParseGeometry(argv[ArgCounter],&XOffset,&YOffset,&foo,&bar);
-    }
-    else if (strcmp(argv[ArgCounter], "-debug") ==0) {
-      Synchronous = True;
     }
     else if (strcmp(argv[ArgCounter], "-patchlevel") == 0) {
       fprintf(stderr,"Patchlevel :%s\n",PATCHLEVEL);
