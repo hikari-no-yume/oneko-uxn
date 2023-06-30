@@ -19,12 +19,13 @@ You can see a diff here: <https://github.com/hikari-no-yume/oneko-uxn/compare/or
 
 New features:
 
-* `-mask` lets you give the neko/cursor mask a different color to the background
+* `-mask` lets you give the neko/cursor mask a different color to the background.
 
 Changed features:
 
-* `-fg`/`-foreground` and `-bg`/`-background` use uxn-style 3-digit hex colours (e.g. `f77` for pink #ff7777)
-* `-time` now takes milliseconds rather than microseconds
+* `-fg`/`-foreground` and `-bg`/`-background` use uxn-style 3-digit hex colours (e.g. `f77` for pink #ff7777).
+* `-time` now takes milliseconds rather than microseconds.
+* The quit shortcut is Ctrl-Q rather than Alt-Q because the latter doesn't work for me on macOS.
 
 Removed features:
 

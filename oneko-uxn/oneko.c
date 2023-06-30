@@ -826,67 +826,46 @@ NekoThinkDraw(void)
  *	キーイベント処理
  */
 
-//Bool
-//ProcessKeyPress(theKeyEvent)
-//    XKeyEvent	*theKeyEvent;
-//{
-//  int			Length;
-//  int			theKeyBufferMaxLen = AVAIL_KEYBUF;
-//  char		theKeyBuffer[AVAIL_KEYBUF + 1];
-//  KeySym		theKeySym;
-//  XComposeStatus	theComposeStatus;
-//  Bool		ReturnState;
-//
-//  ReturnState = True;
-//
-//  Length = XLookupString(theKeyEvent,
-//			 theKeyBuffer, theKeyBufferMaxLen,
-//			 &theKeySym, &theComposeStatus);
-//
-//  if (Length > 0) {
-//    switch (theKeyBuffer[0]) {
-//    case 'q':
-//    case 'Q':
-//      if (theKeyEvent->state & Mod1Mask) { /* META (Alt) キー */
-//	ReturnState = False;
-//      }
-//      break;
-//    default:
-//      break;
-//    }
-//  }
-//
-//  return(ReturnState);
-//}
+Bool CtrlHeld = False;
+
+Bool
+ProcessKeyPress(void)
+{
+  Bool		ReturnState;
+
+  ReturnState = True;
+
+  switch (controller_key()) {
+  case 0:
+    CtrlHeld = controller_button() & ButtonCtrl;
+    break;
+  case 'q':
+  case 'Q':
+    if (CtrlHeld) { /* Ctrl キー */
+      ReturnState = False;
+    }
+    break;
+  default:
+    break;
+  }
+
+  return(ReturnState);
+}
 
 
 /*
  *	イベント処理
  */
 
-//Bool
-//ProcessEvent(void)
-//{
-//    XEvent	theEvent;
-//    Bool	ContinueState = True;
-//
-//    while (XPending(theDisplay)) {
-//        XNextEvent(theDisplay,&theEvent);
-//	switch (theEvent.type) {
-//	case KeyPress:
-//	    ContinueState = ProcessKeyPress(&theEvent);
-//	    if (!ContinueState) {
-//		    return(ContinueState);
-//	    }
-//	    break;
-//	default:
-//	    /* Unknown Event */
-//	    break;
-//	}
-//    }
-//
-//    return(ContinueState);
-//}
+Bool
+ProcessEvent(void)
+{
+    Bool	ContinueState = True;
+
+    ContinueState = ProcessKeyPress();
+
+    return(ContinueState);
+}
 
 
 /*
@@ -955,10 +934,7 @@ ProcessNekoMain(void)
 
   /* メイン処理 */
 
-  // TODO: process events
-  //do {
   NekoThinkDraw();
-  //} while (ProcessEvent());
 }
 
 
@@ -1209,4 +1185,11 @@ main(
 void on_screen(void)
 {
   ProcessNekoMain();
+}
+
+void on_controller(void)
+{
+  if (!ProcessEvent()) {
+    exit(0);
+  }
 }
