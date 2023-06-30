@@ -26,7 +26,7 @@ Changed features:
 * `-fg`/`-foreground` and `-bg`/`-background` use uxn-style 3-digit hex colours (e.g. `f77` for pink #ff7777).
 * `-time` now takes milliseconds rather than microseconds.
 * The quit shortcut is Ctrl-Q rather than Alt-Q because the latter doesn't work for me on macOS.
-* uxn/varvara does not have an equivalent of `.Xresources`, so instead configuration goes in a `oneko-uxn.defaults` file. An example file:
+* uxn/varvara does not have an equivalent of `.Xresources`, so instead configuration goes in an `oneko-uxn.defaults` file. An example file:
 
       foreground: f70
       background: black
