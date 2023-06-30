@@ -26,11 +26,16 @@ Changed features:
 * `-fg`/`-foreground` and `-bg`/`-background` use uxn-style 3-digit hex colours (e.g. `f77` for pink #ff7777).
 * `-time` now takes milliseconds rather than microseconds.
 * The quit shortcut is Ctrl-Q rather than Alt-Q because the latter doesn't work for me on macOS.
+* uxn/varvara does not have an equivalent of `.Xresources`, so instead configuration goes in a `oneko-uxn.defaults` file. An example file:
+
+      foreground: f70
+      background: black
+      speed: 10
+      tora: true
 
 Removed features:
 
 * uxn/varvara does not have a built-in windowing system, so in this port, the neko is stuck inside the window and can't follow other windows. In this way it is like the original xneko.
-* uxn/varvara does not have an equivalent of X Resources for configuration, so the X Resources support is removed. You can still use command-line options to configure it (TODO: make those work).
 * Customizing the window name with `-name` is removed. Technically this could be supported with the varvara metadata port, but it does not seem to be intended for dynamic names.
 * uxn/varvara does not let the application pick which display the window appears on, so the `-display` option is removed.
 * `-debug` used some "synchronize" X feature that is not relevant to uxn.

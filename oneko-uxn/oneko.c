@@ -53,6 +53,51 @@ DrawXBM(
   }
 }
 
+char DefaultsBuf[4096];
+unsigned DefaultsLen;
+
+char *
+GetDefault(
+    char	*option
+)
+{
+  if (!DefaultsLen) {
+    DefaultsLen = file_read("oneko-uxn.defaults", sizeof(DefaultsBuf) - 1, DefaultsBuf);
+  }
+
+  for (char *s = DefaultsBuf; s < DefaultsBuf + DefaultsLen; s++) {
+    char *option_match = option;
+    // match option name prefix
+    while (*option_match) {
+      if (*option_match != *s) {
+        while (*s != '\n' && *s != '\0') {
+           s++;
+        }
+        goto try_next_line;
+      }
+      option_match++;
+      s++;
+    }
+    // match colon
+    if (*(s++) != ':') {
+      return NULL;
+    }
+    // strip leading whitespace
+    while (*s == ' ') {
+      s++;
+    }
+    char *value = s;
+    // find end of line or trailing whitespace, add null terminator
+    while (*s != ' ' && *s != '\n' && *s != '\0') {
+      s++;
+    }
+    *s = '\0';
+    return value;
+try_next_line:;
+  }
+  return NULL;
+}
+
 /*
  *	グローバル変数
  */
@@ -304,12 +349,88 @@ InitBitmaps(void)
 }
 
 /*
- *	オプションを設定
+ *	リソース・データベースから必要なリソースを取り出す
+ */
+
+char	*
+NekoGetDefault(
+    char	*resource
+)
+{
+	char	*value;
+
+	if (value = GetDefault(resource)) {
+		return value;
+	}
+	return NULL;
+}
+
+/*
+ *	リソース・データベースからオプションを設定
  */
 
 void
 GetResources(void)
 {
+  char	*resource;
+  int		num;
+  int loop;
+  if (Foreground == NULL) {
+    if ((resource = NekoGetDefault("foreground")) != NULL) {
+      Foreground = resource;
+    }
+  }
+
+  if (Background == NULL) {
+    if ((resource = NekoGetDefault("background")) != NULL) {
+      Background = resource;
+    }
+  }
+
+  if (MaskColor == NULL) {
+    if ((resource = NekoGetDefault("mask")) != NULL) {
+      MaskColor = resource;
+    }
+  }
+
+  if (IntervalTime == 0) {
+    if ((resource = NekoGetDefault("time")) != NULL) {
+      if (num = atoi(resource)) {
+	IntervalTime = num;
+      }
+    }
+  }
+
+  if (NekoSpeed == 0) {
+    if ((resource = NekoGetDefault("speed")) != NULL) {
+      if (num = atoi(resource)) {
+	NekoSpeed = num;
+      }
+    }
+  }
+
+  if (IdleSpace == 0) {
+    if ((resource = NekoGetDefault("idle")) != NULL) {
+      if (num = atoi(resource)) {
+	IdleSpace = num;
+      }
+    }
+  }
+
+  if (NekoMoyou == NOTDEFINED) {
+    for (loop=0;loop<BITMAPTYPES;loop++)
+      if ((resource = NekoGetDefault(AnimalDefaultsDataTable[loop].name)) != NULL) {
+	if (IsTrue(resource))
+	  NekoMoyou = loop;
+      }
+  }
+
+  if (ReverseVideo == NOTDEFINED) {
+    if ((resource = NekoGetDefault("reverse")) != NULL) {
+      ReverseVideo = IsTrue(resource);
+    }
+  }
+
   if (Foreground == NULL) {
     Foreground = DEFAULT_FOREGROUND;
   }
