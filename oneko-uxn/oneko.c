@@ -976,9 +976,9 @@ char	*message[] = {
 "-fg <color>		: Foreground color",
 "-bg <color>		: Background color",
 "-mask <color>		: Mask color",
-/*"-speed <dots>",
-"-time <microseconds>",
-"-idle <dots>",*/
+"-speed <dots>",
+"-time <milliseconds>",
+"-idle <dots>",
 "-rv			: Reverse video. (effects monochrome display only)",
 /*"-position <geometry>   : adjust position relative to mouse pointer.",
 "-patchlevel            : print out your current patchlevel.",*/
@@ -1049,6 +1049,39 @@ strncmp(
   }
 }
 
+int
+atoi(
+    char	*s
+)
+{
+  int magnitude = 0;
+  int sign = 1;
+  for (;;) {
+    char c = *s;
+    if (!(c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v')) {
+      break;
+    }
+    s++;
+  }
+  if (*s == '+') {
+    s++;
+  } else if (*s == '-') {
+    sign = -1;
+    s++;
+  }
+  for (;;) {
+    magnitude *= 10;
+    char c = *s;
+    if ('0' <= c && c <= '9') {
+      magnitude += c - '0';
+    } else {
+      break;
+    }
+    s++;
+  }
+  return sign * magnitude;
+}
+
 /*
  *	オプションの理解
  */
@@ -1070,33 +1103,36 @@ GetArguments(
       Usage();
       exit(0);
     }
-    /*if (strcmp(argv[ArgCounter], "-speed") == 0) {
+    if (strcmp(argv[ArgCounter], "-speed") == 0) {
       ArgCounter++;
       if (ArgCounter < argc) {
-	NekoSpeed = atof(argv[ArgCounter]);
+	NekoSpeed = atoi(argv[ArgCounter]);
       } else {
-	fprintf(stderr, "%s: -speed option error.\n", ProgramName);
+	eprint(ProgramName);
+	eprint(": -speed option error.\n");
 	exit(1);
       }
     }
     else if (strcmp(argv[ArgCounter], "-time") == 0) {
       ArgCounter++;
       if (ArgCounter < argc) {
-	IntervalTime = atol(argv[ArgCounter]);
+	IntervalTime = atoi(argv[ArgCounter]);
       } else {
-	fprintf(stderr, "%s: -time option error.\n", ProgramName);
+	eprint(ProgramName);
+	eprint(": -time option error.\n");
 	exit(1);
       }
     }
     else if (strcmp(argv[ArgCounter], "-idle") == 0) {
       ArgCounter++;
       if (ArgCounter < argc) {
-	IdleSpace = atol(argv[ArgCounter]);
+	IdleSpace = atoi(argv[ArgCounter]);
       } else {
-	fprintf(stderr, "%s: -idle option error.\n", ProgramName);
+	eprint(ProgramName);
+	eprint(": -time option error.\n");
 	exit(1);
       }
-    }*/
+    }
     else if ((strcmp(argv[ArgCounter], "-fg") == 0) ||
 	     (strcmp(argv[ArgCounter], "-foreground") == 0)) {
       ArgCounter++;

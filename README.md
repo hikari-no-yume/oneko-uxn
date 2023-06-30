@@ -24,6 +24,7 @@ New features:
 Changed features:
 
 * `-fg`/`-foreground` and `-bg`/`-background` use uxn-style 3-digit hex colours (e.g. `f77` for pink #ff7777)
+* `-time` now takes milliseconds rather than microseconds
 
 Removed features:
 
