@@ -36,6 +36,6 @@ Changed features:
 Removed features:
 
 * uxn/varvara does not have a built-in windowing system, so in this port, the neko is stuck inside the window and can't follow other windows. In this way it is like the original xneko.
-* Customizing the window name with `-name` is removed. Technically this could be supported with the varvara metadata port, but it does not seem to be intended for dynamic names.
-* uxn/varvara does not let the application pick which display the window appears on, so the `-display` option is removed.
-* `-debug` used some "synchronize" X feature that is not relevant to uxn.
+* `-name` (customizing the window name). Technically this could be supported with the varvara metadata port, but it does not seem to be intended for dynamic names.
+* `-display`, because uxn/varvara does not let the application pick which display the window appears on.
+* `-debug`, because it used some "synchronize" X feature that is not relevant to uxn.
