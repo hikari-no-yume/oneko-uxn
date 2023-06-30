@@ -2,6 +2,8 @@
 
 [oneko-sakura](http://www.daidouji.com/oneko/)を[chibicc-uxn](https://github.com/lynn/chibicc)を使って[uxn](https://wiki.xxiivv.com/site/uxn.html)に移植したものです。
 
+【警告】 `uxnemu oneko-uxn.rom`を実行しても黒い画面が表示される場合は、[ごく最近修正されたuxnemuのバグ](https://lists.sr.ht/~rabbits/public-inbox/%3C536EBE67-0820-49FF-BBAF-50FBE4DEF97%40noyu.me%3E)が原因です。回避策は、例えば `uxnemu oneko-uxn.rom -neko` のように、少なくとも1つのオプションを追加することです。
+
 ## マニュアル
 
 > かわいい猫がマウスカーソルを追いかけるプログラム
