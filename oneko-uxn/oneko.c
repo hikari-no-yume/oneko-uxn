@@ -1,10 +1,6 @@
 /*
- *	oneko  -  X11 猫
+ *	oneko-uxn  -  uxn 猫
  */
-
-#ifndef	lint
-static char rcsid[] = "$Header: /home/sun/unix/kato/xsam/oneko/oneko.c,v 1.5 90/10/19 21:25:16 kato Exp $";
-#endif
 
 #include "oneko.h"
 #include "patchlevel.h"

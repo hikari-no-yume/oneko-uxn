@@ -1,7 +1,5 @@
 /*
- *	oneko  -  X11 猫
- *
- *	$Header: /home/sun/unix/kato/xsam/oneko/oneko.h,v 1.4 90/10/18 16:52:57 kato Exp Locker: kato $
+ *	oneko-uxn  -  uxn 猫
  */
 
 /*
