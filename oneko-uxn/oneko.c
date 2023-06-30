@@ -5,6 +5,82 @@
 #include "oneko.h"
 #include "patchlevel.h"
 
+// Replacements for C standard functions.
+
+// simpler replacement for fprintf(stderr, …);
+void
+eprint(
+    char	*str
+)
+{
+  while (*str) console_error(*str++);
+}
+
+int
+strcmp(
+    char	*a,
+    char	*b
+)
+{
+  for (;;) {
+    char ac = *a++;
+    char bc = *b++;
+    if (ac - bc || (!ac && !bc)) {
+      return ac - bc;
+    }
+  }
+}
+int
+strncmp(
+    char		*a,
+    char		*b,
+    unsigned	n
+)
+{
+  if (n == 0) {
+    return 0;
+  }
+  for (;;) {
+    char ac = *a++;
+    char bc = *b++;
+    if (ac - bc || (!ac && !bc) || !--n) {
+      return ac - bc;
+    }
+  }
+}
+
+int
+atoi(
+    char	*s
+)
+{
+  int magnitude = 0;
+  int sign = 1;
+  for (;;) {
+    char c = *s;
+    if (!(c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v')) {
+      break;
+    }
+    s++;
+  }
+  if (*s == '+') {
+    s++;
+  } else if (*s == '-') {
+    sign = -1;
+    s++;
+  }
+  for (;;) {
+    char c = *s;
+    if ('0' <= c && c <= '9') {
+      magnitude = magnitude * 10 + (c - '0');
+    } else {
+      break;
+    }
+    s++;
+  }
+  return sign * magnitude;
+}
+
 // Replacements for some X types and functions.
 // These are not exactly the same, they just fulfill a similar function.
 
@@ -493,11 +569,6 @@ ParseHexColor(
   }
   return color;
 }
-
-void
-eprint(
-    char	*str
-);
 
 /*
  *	色を初期設定する
@@ -1078,14 +1149,6 @@ char	*message[] = {
 NULL };
 
 void
-eprint(
-    char	*str
-)
-{
-  while (*str) console_error(*str++);
-}
-
-void
 Usage(void)
 {
   char	**mptr;
@@ -1107,71 +1170,6 @@ Usage(void)
     eprint(AnimalDefaultsDataTable[loop].name);
     eprint(" bitmaps\n");
   }
-}
-
-int
-strcmp(
-    char	*a,
-    char	*b
-)
-{
-  for (;;) {
-    char ac = *a++;
-    char bc = *b++;
-    if (ac - bc || (!ac && !bc)) {
-      return ac - bc;
-    }
-  }
-}
-int
-strncmp(
-    char		*a,
-    char		*b,
-    unsigned	n
-)
-{
-  if (n == 0) {
-    return 0;
-  }
-  for (;;) {
-    char ac = *a++;
-    char bc = *b++;
-    if (ac - bc || (!ac && !bc) || !--n) {
-      return ac - bc;
-    }
-  }
-}
-
-int
-atoi(
-    char	*s
-)
-{
-  int magnitude = 0;
-  int sign = 1;
-  for (;;) {
-    char c = *s;
-    if (!(c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v')) {
-      break;
-    }
-    s++;
-  }
-  if (*s == '+') {
-    s++;
-  } else if (*s == '-') {
-    sign = -1;
-    s++;
-  }
-  for (;;) {
-    char c = *s;
-    if ('0' <= c && c <= '9') {
-      magnitude = magnitude * 10 + (c - '0');
-    } else {
-      break;
-    }
-    s++;
-  }
-  return sign * magnitude;
 }
 
 /*
