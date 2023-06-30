@@ -981,7 +981,7 @@ char	*message[] = {
 "-idle <dots>",
 "-rv			: Reverse video. (effects monochrome display only)",
 "-position <geometry>   : adjust position relative to mouse pointer.",
-/*"-patchlevel            : print out your current patchlevel.",*/
+"-patchlevel            : print out your current patchlevel.",
 NULL };
 
 void
@@ -1162,9 +1162,11 @@ GetArguments(
       }
       YOffset = atoi(y);
     }
-    /*else if (strcmp(argv[ArgCounter], "-patchlevel") == 0) {
-      fprintf(stderr,"Patchlevel :%s\n",PATCHLEVEL);
-    }*/
+    else if (strcmp(argv[ArgCounter], "-patchlevel") == 0) {
+      eprint("Patchlevel :");
+      eprint(PATCHLEVEL);
+      eprint("\n");
+    }
     else {
       char *av = argv[ArgCounter] + 1;
       if (strcmp(av, "bsd") == 0)
