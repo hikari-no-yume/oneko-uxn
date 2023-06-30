@@ -88,7 +88,7 @@ GetDefault(
     }
     char *value = s;
     // find end of line or trailing whitespace, add null terminator
-    while (*s != ' ' && *s != '\n' && *s != '\0') {
+    while (*s != ' ' && *s != '\n' && *s != '\r' && *s != '\0') {
       s++;
     }
     *s = '\0';
