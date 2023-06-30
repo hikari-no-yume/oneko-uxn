@@ -379,6 +379,11 @@ ParseHexColor(
   return color;
 }
 
+void
+eprint(
+    char	*str
+);
+
 /*
  *	色を初期設定する
  */
