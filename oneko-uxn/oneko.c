@@ -683,8 +683,8 @@ CalcDxDy(void)
     PrevMouseX = MouseX;
     PrevMouseY = MouseY;
 
-    MouseX = mouse_x();
-    MouseY = mouse_y();
+    MouseX = mouse_x()+XOffset;
+    MouseY = mouse_y()+YOffset;
 
     LargeX = MouseX - NekoX - BITMAP_WIDTH / 2;
     LargeY = MouseY - NekoY - BITMAP_HEIGHT;
@@ -980,8 +980,8 @@ char	*message[] = {
 "-time <milliseconds>",
 "-idle <dots>",
 "-rv			: Reverse video. (effects monochrome display only)",
-/*"-position <geometry>   : adjust position relative to mouse pointer.",
-"-patchlevel            : print out your current patchlevel.",*/
+"-position <geometry>   : adjust position relative to mouse pointer.",
+/*"-patchlevel            : print out your current patchlevel.",*/
 NULL };
 
 void
@@ -1070,10 +1070,9 @@ atoi(
     s++;
   }
   for (;;) {
-    magnitude *= 10;
     char c = *s;
     if ('0' <= c && c <= '9') {
-      magnitude += c - '0';
+      magnitude = magnitude * 10 + (c - '0');
     } else {
       break;
     }
@@ -1093,8 +1092,6 @@ GetArguments(
 )
 {
   int		ArgCounter;
-  int    result,foo,bar;
-  extern int XOffset,YOffset;
   int loop,found=0;
 
   for (ArgCounter = 0; ArgCounter < argc; ArgCounter++) {
@@ -1150,11 +1147,22 @@ GetArguments(
     else if (strcmp(argv[ArgCounter], "-rv") == 0) {
       ReverseVideo = True;
     }
-    /*else if (strcmp(argv[ArgCounter], "-position") == 0) {
+    else if (strcmp(argv[ArgCounter], "-position") == 0) {
       ArgCounter++;
-      result=XParseGeometry(argv[ArgCounter],&XOffset,&YOffset,&foo,&bar);
+      XOffset = atoi(argv[ArgCounter]);
+      char *y = argv[ArgCounter];
+      for(;;) {
+        if (*y == ',') {
+          y++;
+          break;
+        } else if (*y == '\0') {
+          break;
+        }
+        y++;
+      }
+      YOffset = atoi(y);
     }
-    else if (strcmp(argv[ArgCounter], "-patchlevel") == 0) {
+    /*else if (strcmp(argv[ArgCounter], "-patchlevel") == 0) {
       fprintf(stderr,"Patchlevel :%s\n",PATCHLEVEL);
     }*/
     else {
