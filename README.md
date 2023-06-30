@@ -5,12 +5,113 @@ oneko-uxn
 
 This is a port of [oneko-sakura](http://www.daidouji.com/oneko/) to [uxn](https://wiki.xxiivv.com/site/uxn.html) using [chibicc-uxn](https://github.com/lynn/chibicc).
 
-History
--------
+Manual
+------
+
+> The program oneko creates a cute cat chasing around your mouse cursor.
+>
+> ### SYNOPSIS
+>
+>     uxnemu oneko-sakura.rom [-help] [-tora] [-dog] [-bsd_daemon]
+>                             [-bsd] [-sakura] [-tomoyo]
+>                             [-time n] [-speed n] [-idle n]
+>                             [-position x,y]
+>                             [-rv] [-fg xxx] [-bg xxx] [-mask xxx]
+>
+> ### DESCRIPTION
+> _oneko-sakura_ changes your mouse cursor into mouse and creates a little cute cat and the cat start chasing around your mouse cursor.  If the cat catchup the “mouse”, start sleeping.
+>
+> ### OPTIONS
+> `-help`  
+> Prints help message on usage.
+>
+> `-tora`  
+> Make cat into "tora-neko".  "Tora-neko" means cat with tiger-like stripe.
+>
+> `-dog`  
+> Runs a dog instead of a cat.
+>
+> `-bsd_daemon`  
+> Runs a 4.3BSD daemon instead of a cat.
+>
+> `-bsd`  
+> Same as `-bsd_daemon`.
+>
+> `-sakura`  
+> Runs Sakura Kinomoto instead of a cat.
+>
+> `-tomoyo`  
+> Runs Tomoyo Daidouji instead of a cat.
+>
+> `-time` _interval_  
+> Sets interval timer which determine intervals for cat animation.  Default value is 125 and unit is milli-second.  Smaller value makes cat run faster.
+>
+> `-speed` _distance_  
+> Specify the distance where cat jumps at one move in dot resolution.  Default is 16.
+>
+> `-idle` _speed_  
+> Specify the threshold of the speed which “mouse” running away to wake cat up.
+>
+> `-position` _x_`,`_y_  
+> Specify X and Y offsets in pixels to adjust position of cat relative to mouse pointer.
+>
+> `-rv`  
+> Reverse background color and foreground color.
+>
+> `-fg` _color_  
+> Foreground color. Color is three hexadecimal digits.
+>
+> `-bg` _color_  
+> Background color. Color is three hexadecimal digits.
+>
+> `-mask` _color_  
+> Mask color. Color is three hexadecimal digits.
+>
+> ### CONFIGURATION
+> You can put configuration options in a file called `oneko-uxn.defaults`. Each line should have the format `option: value`, for example `tora: true` for tora-neko mode.
+>
+> Options:
+>
+> `neko`, `tora`, `dog`, `bsd_daemon`, `sakura`, `tomoyo`  
+> Set one of these to “true” to pick a character.
+>
+> `time`  
+> Sets interval timer in milli-second.
+>
+> `speed`  
+> Sets distance to jump in pixel.
+>
+> `idle`  
+> Sets speed threshold to wake cat up when ``mouse'' running away.
+>
+> `reverse`  
+> Set “true” if you want to switch foreground and background color.
+>
+> `foreground`  
+> Foreground color. Color is three hexadecimal digits.
+>
+> `background`  
+> Background color. Color is three hexadecimal digits.
+>
+> `mask`  
+> Mask color. Color is three hexadecimal digits.
+>
+> ### ACKNOWLEDGEMENTS
+> BSD Daemon Copyright 1988 by Marshall Kirk McKusick. All Rights Reserved.
+>
+> Sakura Kinomoto and Tomoyo Daidouji are characters in a comic strip "CARDCAPTOR SAKURA" (CLAMP, Kodansha), with the sanction indicated in CLAMP SCHOOL WEB CAMPUS (http://www.clamp.f-2.co.jp/).
+>
+> ### AUTHOR
+> Original _xneko_ is written by Masayuki Koba and modified to _oneko_ by Tatsuya Kato, and modified furthermore by John Lerchey, Eric Anderson, Toshihiro Kanda and Kiichiroh Mukose. Port to uxn by hikari_no_yume.
+
+History of oneko-uxn
+====================
 
 oneko-sakura is one of the the many versions of “Neko”. Lineage: oneko-sakura by Kiichiroh Mukose et al (see [README](http://www.daidouji.com/oneko/distfiles/README)) ← oneko by Tatsuya Kato et al (see [history website](https://web.archive.org/web/20010502181733/http://hp.vector.co.jp/authors/VA004959/oneko/nekohist.html)) ← xneko by Masayuki Koba. The original Neko is Neko.COM by naoshi, see [Japanese Wikipedia](https://ja.wikipedia.org/wiki/Neko_(%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2)).
 
-This port is based on version `oneko-1.2.sakura.5` from <http://www.daidouji.com/oneko/distfiles/oneko-1.2.sakura.5.tar.gz>. An unmodified copy is included at `original/oneko-1.2.sakura.5.tar.gz`. The rest of the files in this repo are the port. Note that the `README`, `README-NEW`, `README-SUPP`, `oneko.man` and `oneko.man.jp` files are unmodified from the original except for character set conversion.
+This port is based on version `oneko-1.2.sakura.5` from <http://www.daidouji.com/oneko/distfiles/oneko-1.2.sakura.5.tar.gz>. An unmodified copy is included at `original/oneko-1.2.sakura.5.tar.gz`. The `original/` directory also contains the original documentation files, converted to UTF-8 for easier reading.
+
+This port is by me, [hikari\_no\_yume](https://hikari.noyu.me/). I wanted to try using chibicc-uxn to port a “real” application.
 
 Changes from oneko-sakura
 -------------------------

@@ -1073,7 +1073,7 @@ char	*message[] = {
 "-time <milliseconds>",
 "-idle <dots>",
 "-rv			: Reverse video. (effects monochrome display only)",
-"-position <geometry>   : adjust position relative to mouse pointer.",
+"-position <x>,<y>      : adjust position relative to mouse pointer.",
 "-patchlevel            : print out your current patchlevel.",
 NULL };
 
