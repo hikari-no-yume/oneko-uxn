@@ -10,14 +10,14 @@ Manual
 >
 > ### SYNOPSIS
 >
->     uxnemu oneko-sakura.rom [-help] [-tora] [-dog] [-bsd_daemon]
->                             [-bsd] [-sakura] [-tomoyo]
->                             [-time n] [-speed n] [-idle n]
->                             [-position x,y]
->                             [-rv] [-fg xxx] [-bg xxx] [-mask xxx]
+>     uxnemu oneko-uxn.rom [-help] [-tora] [-dog] [-bsd_daemon]
+>                          [-bsd] [-sakura] [-tomoyo]
+>                          [-time n] [-speed n] [-idle n]
+>                          [-position x,y]
+>                          [-rv] [-fg xxx] [-bg xxx] [-mask xxx]
 >
 > ### DESCRIPTION
-> _oneko-sakura_ changes your mouse cursor into mouse and creates a little cute cat and the cat start chasing around your mouse cursor.  If the cat catchup the “mouse”, start sleeping.
+> _oneko-uxn_ changes your mouse cursor into mouse and creates a little cute cat and the cat start chasing around your mouse cursor.  If the cat catchup the “mouse”, start sleeping.
 >
 > ### OPTIONS
 > `-help`  
