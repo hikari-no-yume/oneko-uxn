@@ -159,19 +159,47 @@ GetDefault(
       return NULL;
     }
     // strip leading whitespace
-    while (*s == ' ') {
+    while (*s == ' ' || *s == '\t') {
       s++;
     }
     char *value = s;
-    // find end of line or trailing whitespace, add null terminator
-    while (*s != ' ' && *s != '\n' && *s != '\r' && *s != '\0') {
+    // find end of line
+    while (*s != '\n' && *s != '\0') {
       s++;
     }
+    // strip trailing whitespace (working backwards allows internal whitespace)
+    while (s[-1] == ' ' || s[-1] == '\t' || s[-1] == '\r') {
+      s--;
+    }
+    // null terminate
     *s = '\0';
     return value;
 try_next_line:;
   }
   return NULL;
+}
+
+Bool
+ParseGeometry(
+    char	*text,
+    int		*x,
+    int		*y,
+    Bool	x_separator
+)
+{
+  int x_res = atoi(text);
+  for(;;) {
+    if ((!x_separator && *text == ',') || (x_separator && *text == 'x')) {
+      text++;
+      break;
+    } else if (*text == '\0') {
+      return False;
+    }
+    text++;
+  }
+  *x = x_res;
+  *y = atoi(text);
+  return True;
 }
 
 /*
@@ -228,6 +256,8 @@ int	NekoMoyou = NOTDEFINED;		/*   tora	*/
 int	ReverseVideo = NOTDEFINED;	/*   reverse	*/
 int     XOffset=0,YOffset=0;            /* X and Y offsets for cat from mouse
 					   pointer. */
+Bool    OffsetIsSet = False;            /* whether X and Y offsets are set */
+
 /*
  *	いろいろな状態変数
  */
@@ -501,6 +531,27 @@ GetResources(void)
       }
   }
 
+  if (WindowWidth == 0 && WindowHeight == 0) {
+    if ((resource = NekoGetDefault("size")) != NULL) {
+      if (!ParseGeometry(resource, &WindowWidth, &WindowHeight, True)) {
+	eprint(ProgramName);
+	eprint(": size default error.\n");
+	exit(1);
+      }
+    }
+  }
+
+  if (!OffsetIsSet) {
+    if ((resource = NekoGetDefault("position")) != NULL) {
+      if (!ParseGeometry(resource, &XOffset, &YOffset, False)) {
+	eprint(ProgramName);
+	eprint(": position default error.\n");
+	exit(1);
+      }
+      OffsetIsSet = True;
+    }
+  }
+
   if (ReverseVideo == NOTDEFINED) {
     if ((resource = NekoGetDefault("reverse")) != NULL) {
       ReverseVideo = IsTrue(resource);
@@ -630,9 +681,17 @@ InitScreen(void)
 
   GetResources();
 
-  WindowWidth = 255;
-  WindowHeight = 255;
-  set_screen_size(WindowWidth, WindowHeight);
+  if (WindowWidth != 0 || WindowHeight != 0) {
+    set_screen_size(WindowWidth, WindowHeight);
+    if (screen_width() != WindowWidth || screen_height() != WindowHeight) {
+      eprint(ProgramName);
+      eprint(": Warning: setting window size failed. Maybe it is too big or small.\n");
+    }
+  } else {
+    set_screen_size(BITMAP_WIDTH * 8, BITMAP_HEIGHT * 8);
+  }
+  WindowWidth = screen_width();
+  WindowHeight = screen_height();
 
   SetupColors();
   MakeMouseCursor();
@@ -1134,6 +1193,7 @@ char	*message[] = {
 "-time <milliseconds>",
 "-idle <dots>",
 "-rv			: Reverse video. (effects monochrome display only)",
+"-size <width>x<height> : set window size.",
 "-position <x>,<y>      : adjust position relative to mouse pointer.",
 "-patchlevel            : print out your current patchlevel.",
 NULL };
@@ -1228,20 +1288,22 @@ GetArguments(
     else if (strcmp(argv[ArgCounter], "-rv") == 0) {
       ReverseVideo = True;
     }
+    else if (strcmp(argv[ArgCounter], "-size") == 0) {
+      ArgCounter++;
+      if (!ParseGeometry(argv[ArgCounter], &WindowWidth, &WindowHeight, True)) {
+	eprint(ProgramName);
+	eprint(": -size option error.\n");
+	exit(1);
+      }
+    }
     else if (strcmp(argv[ArgCounter], "-position") == 0) {
       ArgCounter++;
-      XOffset = atoi(argv[ArgCounter]);
-      char *y = argv[ArgCounter];
-      for(;;) {
-        if (*y == ',') {
-          y++;
-          break;
-        } else if (*y == '\0') {
-          break;
-        }
-        y++;
+      if (!ParseGeometry(argv[ArgCounter], &XOffset, &YOffset, False)) {
+	eprint(ProgramName);
+	eprint(": -position option error.\n");
+	exit(1);
       }
-      YOffset = atoi(y);
+      OffsetIsSet = True;
     }
     else if (strcmp(argv[ArgCounter], "-patchlevel") == 0) {
       eprint("Patchlevel :");

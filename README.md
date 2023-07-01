@@ -58,6 +58,9 @@ Manual
 > `-idle` _speed_  
 > Specify the threshold of the speed which “mouse” running away to wake cat up.
 >
+> `-size` _width_`x`_height_  
+> Specify width and height of window in pixels.
+>
 > `-position` _x_`,`_y_  
 > Specify X and Y offsets in pixels to adjust position of cat relative to mouse pointer.
 >
@@ -89,6 +92,12 @@ Manual
 >
 > `idle`  
 > Sets speed threshold to wake cat up when ``mouse'' running away.
+>
+> `size`  
+> Sets width and height of window in pixels. Width and height should be separated by `x`.
+>
+> `position`  
+> Sets X and Y offsets in pixels to adjust position of cat relative to mouse pointer. Offsets should be separated by comma (`,`).
 >
 > `reverse`  
 > Set “true” if you want to switch foreground and background color.
@@ -127,11 +136,14 @@ You can see a diff here: <https://github.com/hikari-no-yume/oneko-uxn/compare/or
 New features:
 
 * `-mask` lets you give the neko/cursor mask a different color to the background.
+* `-size` lets you change the window size.
+* `position` setting can be loaded from the defaults file (not just set with `-position` option).
 
 Changed features:
 
 * `-fg`/`-foreground` and `-bg`/`-background` use uxn-style 3-digit hex colours (e.g. `f77` for pink #ff7777).
 * `-time` now takes milliseconds rather than microseconds.
+* `-position` uses a slightly different syntax.
 * The quit shortcut is Ctrl-Q rather than Alt-Q because the latter doesn't work for me on macOS.
 * uxn/varvara does not have an equivalent of `.Xresources`, so instead configuration goes in an `oneko-uxn.defaults` file. An example file:
 
