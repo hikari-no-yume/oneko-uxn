@@ -839,20 +839,6 @@ IsNekoMoveStart(void)
     }
 }
 
-// https://en.wikipedia.org/wiki/Integer_square_root#Example_implementation_in_C
-unsigned usqrt(unsigned s)
-{
-    if (s <= 1) return s;
-    unsigned x0 = s / 2;
-    unsigned x1 = (x0 + s / x0) / 2;
-    while (x1 < x0)
-    {
-         x0 = x1;
-         x1 = (x0 + s / x0) / 2;
-    }
-    return x0;
-}
-
 /*
  *	猫移動 dx, dy 計算
  */
@@ -860,13 +846,8 @@ unsigned usqrt(unsigned s)
 void
 CalcDxDy(void)
 {
-    // These are used for Euclidean distance calculation. They must be big
-    // enough to hold a value as large as WindowWidth² or WindowHeight².
-    // In oneko-sakura these were `double`, but uxn does not have floats.
-    // Solution: limit window size to 255×255 (`unsigned char` limit) so that
-    // it will be ≤ 65535 (`unsigned int` limit).
     int		LargeX, LargeY;
-    unsigned		SquaredLength, Length;
+    unsigned		Length;
 
     PrevMouseX = MouseX;
     PrevMouseY = MouseY;
@@ -877,10 +858,19 @@ CalcDxDy(void)
     LargeX = MouseX - NekoX - BITMAP_WIDTH / 2;
     LargeY = MouseY - NekoY - BITMAP_HEIGHT;
 
-    SquaredLength = LargeX * LargeX + LargeY * LargeY;
+    // oneko-sakura used Euclidean distance (sqrt(a*a + b*b)), but this is
+    // impractical on uxn which has 16-bit max integer size and no floats.
+    // Even for a tiny window size of 255×255 a diagonal vector can cause
+    // overflow: (255*255 + 255*255) > 65535. Also integer sqrt() is expensive.
+    //
+    // lynn (foldr.moe) suggested this cheaper approximation: average of the
+    // L1 norm and L∞ norm. With this scale factor, the error from Euclidean
+    // for unit circle values is about ±0.0625, which is pretty good.
+    unsigned AbsX = LargeX > 0 ? LargeX : -LargeX;
+    unsigned AbsY = LargeY > 0 ? LargeY : -LargeY;
+    Length = ((AbsX + AbsY + (AbsX > AbsY ? AbsX : AbsY)) * 15) / 32;
 
-    if (SquaredLength != 0) {
-	Length = usqrt(SquaredLength);
+    if (Length != 0) {
 	if (Length <= NekoSpeed) {
 	    NekoMoveDx = LargeX;
 	    NekoMoveDy = LargeY;
