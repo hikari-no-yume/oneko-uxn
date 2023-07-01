@@ -9,7 +9,7 @@ This is a port of [oneko-sakura](http://www.daidouji.com/oneko/) to [uxn](https:
 
 [Download the uxn ROM here](https://github.com/hikari-no-yume/oneko-uxn/releases/download/1.2.sakura.5.uxn.1/1.2.sakura.5.uxn.1.zip)
 
-Warning: If you run `uxnemu oneko-uxn.rom` and just get a black screen, this is due [a bug in uxnemu that was only fixed very recently](https://lists.sr.ht/~rabbits/public-inbox/%3C536EBE67-0820-49FF-BBAF-50FBE4DFEF97%40noyu.me%3E). The workaround is to add at least one option, e.g. `uxnemu oneko-uxn.rom -neko`.
+Warning: If you run `uxnemu oneko-uxn.rom` and just get a black screen, this is due to [a bug in uxnemu that was only fixed very recently](https://lists.sr.ht/~rabbits/public-inbox/%3C536EBE67-0820-49FF-BBAF-50FBE4DFEF97%40noyu.me%3E). The workaround is to add at least one option, e.g. `uxnemu oneko-uxn.rom -neko`.
 
 Manual
 ------
@@ -68,13 +68,13 @@ Manual
 > Reverse background color and foreground color.
 >
 > `-fg` _color_  
-> Foreground color. Color is three hexadecimal digits.
+> Foreground color. Color is three hexadecimal digits (RGB).
 >
 > `-bg` _color_  
-> Background color. Color is three hexadecimal digits.
+> Background color. Color is three hexadecimal digits (RGB).
 >
 > `-mask` _color_  
-> Mask color. Color is three hexadecimal digits.
+> Mask color. Color is three hexadecimal digits (RGB).
 >
 > ### CONFIGURATION
 > You can put configuration options in a file called `oneko-uxn.defaults`. Each line should have the format `option: value`, for example `tora: true` for tora-neko mode.
@@ -103,13 +103,13 @@ Manual
 > Set “true” if you want to switch foreground and background color.
 >
 > `foreground`  
-> Foreground color. Color is three hexadecimal digits.
+> Foreground color. Color is three hexadecimal digits (RGB).
 >
 > `background`  
-> Background color. Color is three hexadecimal digits.
+> Background color. Color is three hexadecimal digits (RGB).
 >
 > `mask`  
-> Mask color. Color is three hexadecimal digits.
+> Mask color. Color is three hexadecimal digits (RGB).
 >
 > ### ACKNOWLEDGEMENTS
 > BSD Daemon Copyright 1988 by Marshall Kirk McKusick. All Rights Reserved.
@@ -122,11 +122,11 @@ Manual
 History of oneko-uxn
 ====================
 
-oneko-sakura is one of the the many versions of “Neko”. Lineage: oneko-sakura by Kiichiroh Mukose et al (see [README](http://www.daidouji.com/oneko/distfiles/README)) ← oneko by Tatsuya Kato et al (see [history website](https://web.archive.org/web/20010502181733/http://hp.vector.co.jp/authors/VA004959/oneko/nekohist.html)) ← xneko by Masayuki Koba. The original Neko is Neko.COM by naoshi, see [Japanese Wikipedia](https://ja.wikipedia.org/wiki/Neko_(%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2)).
+oneko-sakura is one of the many versions of “Neko”. Lineage: oneko-sakura by Kiichiroh Mukose et al (see [README](http://www.daidouji.com/oneko/distfiles/README)) ← oneko by Tatsuya Kato et al (see [history website](https://web.archive.org/web/20010502181733/http://hp.vector.co.jp/authors/VA004959/oneko/nekohist.html)) ← xneko by Masayuki Koba. The original Neko is Neko.COM by naoshi, see [Japanese Wikipedia](https://ja.wikipedia.org/wiki/Neko_(%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2)).
 
 This port is based on version `oneko-1.2.sakura.5` from <http://www.daidouji.com/oneko/distfiles/oneko-1.2.sakura.5.tar.gz>. An unmodified copy is included at `original/oneko-1.2.sakura.5.tar.gz`. The `original/` directory also contains the original documentation files, converted to UTF-8 for easier reading.
 
-This port is by me, [hikari\_no\_yume](https://hikari.noyu.me/). I wanted to try using chibicc-uxn to port a “real” application.
+This port is by me, [hikari\_no\_yume](https://hikari.noyu.me/). I helped create chibicc-uxn and wanted to try using it to port a “real” application.
 
 Changes from oneko-sakura
 -------------------------
@@ -141,7 +141,7 @@ New features:
 
 Changed features:
 
-* The cursor colors were inverted. This was an accident, but I think some of them look better this way, and it matches the original xneko.
+* The cursor colors were inverted. This was an accident, but I think some of the cursors look better this way, and it matches the original xneko.
 * `-fg`/`-foreground` and `-bg`/`-background` use uxn-style 3-digit hex colours (e.g. `f77` for pink #ff7777).
 * `-time` now takes milliseconds rather than microseconds.
 * `-position` uses a slightly different syntax.
