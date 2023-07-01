@@ -141,6 +141,7 @@ New features:
 
 Changed features:
 
+* The cursor colors were inverted. This was an accident, but I think some of them look better this way, and it matches the original xneko.
 * `-fg`/`-foreground` and `-bg`/`-background` use uxn-style 3-digit hex colours (e.g. `f77` for pink #ff7777).
 * `-time` now takes milliseconds rather than microseconds.
 * `-position` uses a slightly different syntax.
