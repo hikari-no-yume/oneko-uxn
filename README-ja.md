@@ -146,7 +146,7 @@ diffはこちらです。 <https://github.com/hikari-no-yume/oneko-uxn/compare/o
 * uxn/varvaraには`.Xresources`に相当するものがないので、代わりに`oneko-uxn.defaults`ファイルに以下のように設定を入れます。
 
       foreground: f70
-      background: black
+      background: 000
       speed: 10
       tora: true
 

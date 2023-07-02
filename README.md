@@ -149,7 +149,7 @@ Changed features:
 * uxn/varvara does not have an equivalent of `.Xresources`, so instead configuration goes in an `oneko-uxn.defaults` file. An example file:
 
       foreground: f70
-      background: black
+      background: 000
       speed: 10
       tora: true
 
